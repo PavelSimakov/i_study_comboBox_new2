@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>627</width>
+    <height>356</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>14</pointsize>
+    <weight>75</weight>
+    <italic>true</italic>
+    <bold>true</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>627</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Тарифы</string>
+    </property>
+    <widget class="QMenu" name="menu_tariffs">
+     <property name="title">
+      <string>Настроить тарифы</string>
+     </property>
+     <addaction name="action_addTariff"/>
+     <addaction name="action_removeTariff"/>
+    </widget>
+    <addaction name="menu_tariffs"/>
+    <addaction name="action_save_list_tariffs"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_settingTariff">
+    <property name="title">
+     <string>Настройка тарифов</string>
+    </property>
+    <addaction name="action_addRow"/>
+    <addaction name="action_removeRow"/>
+    <addaction name="separator"/>
+    <addaction name="action_save_tariff"/>
+    <addaction name="action_save_settingTariffs"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_settingTariff"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockWidget_setting">
+   <property name="windowTitle">
+    <string>Нстройка тарифа</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QComboBox" name="comboBox_setting">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhDigitsOnly</set>
+         </property>
+         <property name="maxCount">
+          <number>10</number>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+         <property name="minimumContentsLength">
+          <number>10</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableView" name="tableView">
+         <property name="sizeAdjustPolicy">
+          <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+         </property>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>39</number>
+         </attribute>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="action">
+   <property name="text">
+    <string>Добавить тариф</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Удалить тариф</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>Настроить тарифы</string>
+   </property>
+  </action>
+  <action name="action_addTariff">
+   <property name="text">
+    <string>Добавить тариф</string>
+   </property>
+  </action>
+  <action name="action_removeTariff">
+   <property name="text">
+    <string>Удалить тариф</string>
+   </property>
+  </action>
+  <action name="action_save_list_tariffs">
+   <property name="text">
+    <string>Сохранить тарифы</string>
+   </property>
+  </action>
+  <action name="action_addRow">
+   <property name="text">
+    <string>Добавить строку</string>
+   </property>
+  </action>
+  <action name="action_removeRow">
+   <property name="text">
+    <string>Удалить строку</string>
+   </property>
+  </action>
+  <action name="action_save_tariff">
+   <property name="text">
+    <string>Сохранить тариф</string>
+   </property>
+  </action>
+  <action name="action_save_settingTariffs">
+   <property name="text">
+    <string>Сохранить тарифы</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
