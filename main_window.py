@@ -1,3 +1,4 @@
+import os
 import pickle
 
 from PyQt5 import QtCore, QtWidgets, QtGui
@@ -10,6 +11,22 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.setupUi(self)
 
         self.tariffsList = []
+
+        if os.access('data/tariff_list.txt', os.F_OK):
+            if os.path.getsize('data/tariff_list.txt') > 5:
+                f = open('data/tariff_list.txt', 'rb')
+                self.tariffsList = pickle.load(f)
+                print(self.tariffsList)
+            else:
+                QtWidgets.QMessageBox.information(self.centralWidget(), 'Тарифы не настроены!',
+                                                  'Вам нужно настроить тариф по которому вы работаете.',
+                                                  buttons=QtWidgets.QMessageBox.Cancel,
+                                                  defaultButton=QtWidgets.QMessageBox.Cancel)
+        else:
+            QtWidgets.QMessageBox.information(self.centralWidget(), 'Тарифы не настроены!',
+                                              'Вам нужно настроить тариф по которому вы работаете.',
+                                              buttons=QtWidgets.QMessageBox.Cancel,
+                                              defaultButton=QtWidgets.QMessageBox.Cancel)
 
         self.tableModel = QtGui.QStandardItemModel()
         self.tableView.setModel(self.tableModel)
