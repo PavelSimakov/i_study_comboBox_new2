@@ -1,3 +1,5 @@
+import pickle
+
 from PyQt5 import QtCore, QtWidgets, QtGui
 import my_form
 
@@ -34,6 +36,9 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         for i in range(self.comboBox_setting.count()):
             self.tariffsList.append(self.comboBox_setting.itemText(i))
         print(self.tariffsList)
+        f = open('data/tariff_list.txt', 'wb')
+        pickle.dump(self.tariffsList, f)
+        f.close()
         return self.tariffsList
 
 

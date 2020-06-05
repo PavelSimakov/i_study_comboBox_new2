@@ -21,14 +21,14 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QWidget" name="central_widget"/>
+  <widget class="QMenuBar" name="menu_bar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>627</width>
-     <height>30</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -36,6 +36,15 @@
      <string>Тарифы</string>
     </property>
     <widget class="QMenu" name="menu_tariffs">
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="title">
       <string>Настроить тарифы</string>
      </property>
@@ -59,7 +68,7 @@
    <addaction name="menu"/>
    <addaction name="menu_settingTariff"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="status_bar"/>
   <widget class="QDockWidget" name="dockWidget_setting">
    <property name="windowTitle">
     <string>Нстройка тарифа</string>
@@ -71,6 +80,9 @@
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>10</number>
+       </property>
        <item>
         <widget class="QComboBox" name="comboBox_setting">
          <property name="font">
@@ -97,9 +109,24 @@
        </item>
        <item>
         <widget class="QTableView" name="tableView">
+         <property name="font">
+          <font>
+           <family>MS Shell Dlg 2</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhDigitsOnly</set>
+         </property>
          <property name="sizeAdjustPolicy">
           <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
          </property>
+         <attribute name="horizontalHeaderMinimumSectionSize">
+          <number>50</number>
+         </attribute>
          <attribute name="verticalHeaderDefaultSectionSize">
           <number>39</number>
          </attribute>
@@ -139,10 +166,26 @@
    <property name="text">
     <string>Сохранить тарифы</string>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
   </action>
   <action name="action_addRow">
    <property name="text">
     <string>Добавить строку</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
    </property>
   </action>
   <action name="action_removeRow">
