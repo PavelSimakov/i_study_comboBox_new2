@@ -11,18 +11,18 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.setupUi(self)
 
-        self.tariffsList = []
-        self.current_index = None
-        self.settingTariffDict = {}
-
+        self.tariffsList = []  # для временного хранения списка тарифов
+        self.current_index = None  # для хранения выбранного индекса comboBox
+        self.settingTariffDict = {}  # для хранения настроек тарифов
+        # настройка comboBox
         self.tariff_index = QtCore.QStringListModel()
         self.comboBox_setting.setModel(self.tariff_index)
-
+        # подготовка таблицы для настройки тарифов
         self.tableModel = QtGui.QStandardItemModel()
         self.tableView.setModel(self.tableModel)
         self.tableHeaderList = ['Накат', 'Проценты']
         self.tableModel.setHorizontalHeaderLabels(self.tableHeaderList)
-
+        # если файлы, с сохранёнными настройками, существуют то они загружаются для дальнейшего использования
         try:
             f = open('data/settingTariffDict.txt', 'rb')
             self.settingTariffDict = pickle.load(f)
@@ -31,37 +31,41 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             f = open('data/comboBox_currentIndex.txt', 'rb')
             self.current_index = pickle.load(f)
             f.close()
+        # если тарифы не настроены то выполняется этот код
         except (FileNotFoundError, EOFError):
             QtWidgets.QMessageBox.information(self.centralWidget(), 'Тарифы не настроены!',
                                               'Вам нужно настроить тариф по которому вы работаете.',
                                               buttons=QtWidgets.QMessageBox.Cancel,
                                               defaultButton=QtWidgets.QMessageBox.Cancel)
+        # если тарифы настроены то выполняется этот код
         else:
-            self.comboBox_setting.addItems(self.settingTariffDict.keys())
-            self.comboBox_setting.setCurrentIndex(self.current_index)
+            self.comboBox_setting.addItems(self.settingTariffDict.keys())  # заполнение comboBox названиями тарифов
+            self.comboBox_setting.setCurrentIndex(self.current_index)  # настойка ранее выбраного тарифа
             print(self.current_index)
-            tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
+            tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]  # выбор соответствующих данных
+            # по выбраному тарифу
             print(tariff_dict)
-            tariff_keys = list(tariff_dict.keys())
-            tariff_list = list(tariff_dict.values())
+            tariff_keys = list(tariff_dict.keys())  # список для ключей
+            tariff_list = list(tariff_dict.values())  # список для настроек тарифов
             print(tariff_keys)
             print(tariff_list)
-            for row in range(len(tariff_dict)):
-                item_0 = QtGui.QStandardItem(str(tariff_keys[row]))
-                item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))
-                self.tableModel.setItem(row, 0, item_0)
-                self.tableModel.setItem(row, 1, item_1)
-
+            for row in range(len(tariff_dict)):  # цикл для заполнения таблицы
+                item_0 = QtGui.QStandardItem(str(tariff_keys[row]))  # модель для заполнения первой колонки
+                item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))  # модель для заполнения второй колонки
+                self.tableModel.setItem(row, 0, item_0)  # заполняем первую колонку
+                self.tableModel.setItem(row, 1, item_1)  # заполняем вторую колонку
+        # действие при выборе тарифа
         self.comboBox_setting.activated[int].connect(self.comboBox_activated)
+        # действия меню
+        self.action_addTariff.triggered.connect(self.add_new_tariff)  # добавляет тариф
+        self.action_removeTariff.triggered.connect(self.remove_tariff)  # удаляет тариф
+        self.action_save_list_tariffs.triggered.connect(self.save_list_tariffs)  # сохраняет ефрифы в список
+        self.action_addRow.triggered.connect(self.tableTariff_addRow)  # добавляет строку в таблицу
+        self.action_removeRow.triggered.connect(self.tableTariff_removeRow)  # удаляет строку из таблицы
+        self.action_save_tariff.triggered.connect(self.tableTariff_saveTariff)  # сожраняет настройки тарифов в словарь
+        self.action_save_settings.triggered.connect(self.saveSettings)  # сохранят настройки тарифов и программы
 
-        self.action_addTariff.triggered.connect(self.add_new_tariff)
-        self.action_removeTariff.triggered.connect(self.remove_tariff)
-        self.action_save_list_tariffs.triggered.connect(self.save_list_tariffs)
-        self.action_addRow.triggered.connect(self.tableTariff_addRow)
-        self.action_removeRow.triggered.connect(self.tableTariff_removeRow)
-        self.action_save_tariff.triggered.connect(self.tableTariff_saveTariff)
-        self.action_save_settings.triggered.connect(self.saveSettings)
-
+    # метод добавляет новый тариф
     def add_new_tariff(self):
         self.comboBox_setting.setEditable(True)
         self.comboBox_setting.setEditText('Новый тариф')
