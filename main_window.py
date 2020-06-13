@@ -1,8 +1,8 @@
-import os
 import pickle
 from decimal import Decimal
 
 from PyQt5 import QtCore, QtWidgets, QtGui
+
 import my_form
 
 
@@ -13,39 +13,44 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         self.tariffsList = []
         self.current_index = None
+        self.settingTariffDict = {}
 
-        if os.access('data/tariff_list.txt', os.F_OK):
-            if os.path.getsize('data/tariff_list.txt') > 5:
-                f = open('data/tariff_list.txt', 'rb')
-                self.tariffsList = pickle.load(f)
-                f.close()
-
-                f = open('data/comboBox_currentIndex.txt', 'rb')
-                self.current_index = pickle.load(f)
-                f.close()
-
-            else:
-                QtWidgets.QMessageBox.information(self.centralWidget(), 'Тарифы не настроены!',
-                                                  'Вам нужно настроить тариф по которому вы работаете.',
-                                                  buttons=QtWidgets.QMessageBox.Cancel,
-                                                  defaultButton=QtWidgets.QMessageBox.Cancel)
-        else:
-            QtWidgets.QMessageBox.information(self.centralWidget(), 'Тарифы не настроены!',
-                                              'Вам нужно настроить тариф по которому вы работаете.',
-                                              buttons=QtWidgets.QMessageBox.Cancel,
-                                              defaultButton=QtWidgets.QMessageBox.Cancel)
+        self.tariff_index = QtCore.QStringListModel()
+        self.comboBox_setting.setModel(self.tariff_index)
 
         self.tableModel = QtGui.QStandardItemModel()
         self.tableView.setModel(self.tableModel)
         self.tableHeaderList = ['Накат', 'Проценты']
         self.tableModel.setHorizontalHeaderLabels(self.tableHeaderList)
 
-        self.tariff_index = QtCore.QStringListModel()
-        self.comboBox_setting.setModel(self.tariff_index)
-        print(self.tariffsList)
-        print(self.current_index)
-        self.comboBox_setting.addItems(self.tariffsList)
-        self.comboBox_setting.setCurrentIndex(self.current_index)
+        try:
+            f = open('data/settingTariffDict.txt', 'rb')
+            self.settingTariffDict = pickle.load(f)
+            f.close()
+
+            f = open('data/comboBox_currentIndex.txt', 'rb')
+            self.current_index = pickle.load(f)
+            f.close()
+        except (FileNotFoundError, EOFError):
+            QtWidgets.QMessageBox.information(self.centralWidget(), 'Тарифы не настроены!',
+                                              'Вам нужно настроить тариф по которому вы работаете.',
+                                              buttons=QtWidgets.QMessageBox.Cancel,
+                                              defaultButton=QtWidgets.QMessageBox.Cancel)
+        else:
+            self.comboBox_setting.addItems(self.settingTariffDict.keys())
+            self.comboBox_setting.setCurrentIndex(self.current_index)
+            print(self.current_index)
+            tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
+            print(tariff_dict)
+            tariff_keys = list(tariff_dict.keys())
+            tariff_list = list(tariff_dict.values())
+            print(tariff_keys)
+            print(tariff_list)
+            for row in range(len(tariff_dict)):
+                item_0 = QtGui.QStandardItem(str(tariff_keys[row]))
+                item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))
+                self.tableModel.setItem(row, 0, item_0)
+                self.tableModel.setItem(row, 1, item_1)
 
         self.comboBox_setting.activated[int].connect(self.comboBox_activated)
 
@@ -59,20 +64,21 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
     def add_new_tariff(self):
         self.comboBox_setting.setEditable(True)
-        self.comboBox_setting.addItem('Название тарифа')
+        self.comboBox_setting.setEditText('Новый тариф')
 
     def remove_tariff(self):
         ind = self.comboBox_setting.currentIndex()
+        if self.comboBox_setting.currentText() in self.settingTariffDict:
+            del self.settingTariffDict[self.comboBox_setting.currentText()]
         self.comboBox_setting.removeItem(ind)
+        print(self.settingTariffDict)
 
     def save_list_tariffs(self):
         self.comboBox_setting.setEditable(False)
+        self.tariffsList.clear()
         for i in range(self.comboBox_setting.count()):
             self.tariffsList.append(self.comboBox_setting.itemText(i))
         print(self.tariffsList)
-        f = open('data/tariff_list.txt', 'wb')
-        pickle.dump(self.tariffsList, f)
-        f.close()
         return self.tariffsList
 
     def tableTariff_addRow(self):
@@ -89,19 +95,20 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     def tableTariff_saveTariff(self):
         key_list = []
         date_list = []
-        name_tariff = self.comboBox_setting.currentIndex()
+        name_tariff = self.comboBox_setting.currentText()
+        print(name_tariff)
         ind = QtCore.QModelIndex()
         for i in range(0, self.tableModel.rowCount(ind)):
             key_list.append(int(self.tableModel.index(i, 0).data()))
             date_list.append(Decimal(self.tableModel.index(i, 1).data()) / Decimal(100))
-        self.settingDateDict = dict(zip(key_list, date_list))
-        self.settingTariffList[name_tariff] = self.settingDateDict
-        print(self.settingTariffList)
-        return self.settingTariffList
+        settingDateDict = dict(zip(key_list, date_list))
+        self.settingTariffDict.update({name_tariff: settingDateDict})
+        print(self.settingTariffDict)
+        return self.settingTariffDict
 
     def saveSettings(self):
-        f = open('data/save_settings.txt', 'wb')
-        pickle.dump(self.settingTariffList, f)
+        f = open('data/settingTariffDict.txt', 'wb')
+        pickle.dump(self.settingTariffDict, f)
         f.close()
         current_index = self.comboBox_setting.currentIndex()
         f = open('data/comboBox_currentIndex.txt', 'wb')
@@ -111,6 +118,17 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
     def comboBox_activated(self, v):
         print('index', v)
+        tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
+        print(tariff_dict)
+        tariff_keys = list(tariff_dict.keys())
+        tariff_list = list(tariff_dict.values())
+        print(tariff_keys)
+        print(tariff_list)
+        for row in range(len(tariff_dict)):
+            item_0 = QtGui.QStandardItem(str(tariff_keys[row]))
+            item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))
+            self.tableModel.setItem(row, 0, item_0)
+            self.tableModel.setItem(row, 1, item_1)
 
 
 if __name__ == "__main__":
