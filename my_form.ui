@@ -12,7 +12,7 @@
   </property>
   <property name="font">
    <font>
-    <pointsize>14</pointsize>
+    <pointsize>12</pointsize>
     <weight>75</weight>
     <italic>true</italic>
     <bold>true</bold>
@@ -21,55 +21,31 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="central_widget"/>
-  <widget class="QMenuBar" name="menu_bar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>627</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>Тарифы</string>
-    </property>
-    <widget class="QMenu" name="menu_tariffs">
-     <property name="font">
-      <font>
-       <family>MS Shell Dlg 2</family>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <italic>true</italic>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="title">
-      <string>Настроить тарифы</string>
-     </property>
-     <addaction name="action_addTariff"/>
-     <addaction name="action_removeTariff"/>
-    </widget>
-    <addaction name="menu_tariffs"/>
-    <addaction name="action_save_list_tariffs"/>
-    <addaction name="separator"/>
-   </widget>
-   <widget class="QMenu" name="menu_settingTariff">
-    <property name="title">
-     <string>Настройка тарифов</string>
-    </property>
-    <addaction name="action_addRow"/>
-    <addaction name="action_removeRow"/>
-    <addaction name="separator"/>
-    <addaction name="action_save_tariff"/>
-    <addaction name="action_save_settingTariffs"/>
-   </widget>
-   <addaction name="menu"/>
-   <addaction name="menu_settingTariff"/>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks|QMainWindow::GroupedDragging|QMainWindow::VerticalTabs</set>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="central_widget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTableView" name="tableView_shifts"/>
+    </item>
+   </layout>
   </widget>
-  <widget class="QStatusBar" name="status_bar"/>
+  <widget class="QStatusBar" name="status_bar">
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
   <widget class="QDockWidget" name="dockWidget_setting">
+   <property name="features">
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
    <property name="windowTitle">
     <string>Нстройка тарифа</string>
    </property>
@@ -79,10 +55,38 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,5">
        <property name="spacing">
-        <number>10</number>
+        <number>20</number>
        </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="QDateEdit" name="dateEdit_shift">
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="buttonSymbols">
+          <enum>QAbstractSpinBox::NoButtons</enum>
+         </property>
+         <property name="displayFormat">
+          <string>dd.MM.yy</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QComboBox" name="comboBox_setting">
          <property name="font">
@@ -136,6 +140,87 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QMenuBar" name="menu_bar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>627</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_settings">
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="title">
+     <string>Тарифы</string>
+    </property>
+    <widget class="QMenu" name="menu_tariffs">
+     <property name="font">
+      <font>
+       <family>Noto Sans</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="title">
+      <string>Настроить тарифы</string>
+     </property>
+     <widget class="QMenu" name="menu_settingTariffs">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="title">
+       <string>Настройка тарифов</string>
+      </property>
+      <addaction name="action_addRow_settingTable"/>
+      <addaction name="action_removeRow_settingTable"/>
+      <addaction name="separator"/>
+      <addaction name="action_saveSettingTariffs"/>
+     </widget>
+     <addaction name="action_addTariff"/>
+     <addaction name="action_removeTariff"/>
+     <addaction name="separator"/>
+     <addaction name="menu_settingTariffs"/>
+    </widget>
+    <addaction name="menu_tariffs"/>
+    <addaction name="action_save_list_tariffs"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menu_shifts">
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="title">
+     <string>Рабочие смены</string>
+    </property>
+    <addaction name="action_addShift"/>
+    <addaction name="action_removeShift"/>
+    <addaction name="action_editTariff"/>
+    <addaction name="separator"/>
+    <addaction name="action_saveData"/>
+   </widget>
+   <addaction name="menu_settings"/>
+   <addaction name="menu_shifts"/>
   </widget>
   <action name="action">
    <property name="text">
@@ -201,6 +286,70 @@
   <action name="action_save_settingTariffs">
    <property name="text">
     <string>Сохранить тарифы</string>
+   </property>
+  </action>
+  <action name="action_addRow_settingTable">
+   <property name="text">
+    <string>Добавить строку</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+  </action>
+  <action name="action_removeRow_settingTable">
+   <property name="text">
+    <string>Удалить строку</string>
+   </property>
+  </action>
+  <action name="action_saveSettingTariffs">
+   <property name="text">
+    <string>Сохранить настройки тарифов</string>
+   </property>
+  </action>
+  <action name="action_addShift">
+   <property name="text">
+    <string>Добавить смену</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+  </action>
+  <action name="action_removeShift">
+   <property name="text">
+    <string>Удалить смену</string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+  </action>
+  <action name="action_saveData">
+   <property name="text">
+    <string>Сохранить данные</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Настроить дату</string>
+   </property>
+  </action>
+  <action name="action_editTariff">
+   <property name="text">
+    <string>Редактировать смену</string>
    </property>
   </action>
  </widget>

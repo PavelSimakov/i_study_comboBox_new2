@@ -14,14 +14,33 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.tariffsList = []  # для временного хранения списка тарифов
         self.current_index = None  # для хранения выбранного индекса comboBox
         self.settingTariffDict = {}  # для хранения настроек тарифов
+
+        # настройка dateEdit
+        self.date = QtCore.QDate  # экземпляр QDate
+        self.dateEdit_shift.setDate(self.date.currentDate())  # текущая дата в editDate
+
+        # вертикальный HeaderList в таблице смен
+        self.shiftVerticalHeaderList = ('Яндекс', 'Gett', 'City', 'Общий накат',
+                                        'Мой процент', 'Штрафы', 'За смену')
+        self.shiftsNameList = []  # список для хранения названий смен
+        self.shiftDateList = []  # список для хранения данных по смене
+        self.dateMonth = {}  # словарь для хранения данных по сменам за месяц
+
         # настройка comboBox
-        self.tariff_index = QtCore.QStringListModel()
-        self.comboBox_setting.setModel(self.tariff_index)
+        self.tariff_model = QtCore.QStringListModel()  # модель для comboBox
+        self.comboBox_setting.setModel(self.tariff_model)  # настраиваем модель для comboBox
+
         # подготовка таблицы для настройки тарифов
-        self.tableModel = QtGui.QStandardItemModel()
-        self.tableView.setModel(self.tableModel)
-        self.tableHeaderList = ['Накат', 'Проценты']
-        self.tableModel.setHorizontalHeaderLabels(self.tableHeaderList)
+        self.tableModel = QtGui.QStandardItemModel()  #
+        self.tableView.setModel(self.tableModel)  #
+        self.tableHeaderList = ['Накат', 'Проценты']  #
+        self.tableModel.setHorizontalHeaderLabels(self.tableHeaderList)  #
+
+        # настраиваем табдицу смен
+        self.StIM_shiftsTable = QtGui.QStandardItemModel()  #
+        self.StIM_shiftsTable.setVerticalHeaderLabels(self.shiftVerticalHeaderList)  #
+        self.tableView_shifts.setModel(self.StIM_shiftsTable)  #
+
         # если файлы, с сохранёнными настройками, существуют то они загружаются для дальнейшего использования
         try:
             f = open('data/settingTariffDict.txt', 'rb')
@@ -31,10 +50,11 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             f = open('data/comboBox_currentIndex.txt', 'rb')
             self.current_index = pickle.load(f)
             f.close()
-        # если тарифы не настроены то выполняется этот код
+        # если  файлов с настпройками тарифов нет, то выполняется этот код
         except (FileNotFoundError, EOFError):
+            # диалоговое окно с информацией о отсутствии настроеных тарифов
             QtWidgets.QMessageBox.information(self.centralWidget(), 'Тарифы не настроены!',
-                                              'Вам нужно настроить тариф по которому вы работаете.',
+                                              'Вам нужно настроить тарифы для расчёта зарплаты.',
                                               buttons=QtWidgets.QMessageBox.Cancel,
                                               defaultButton=QtWidgets.QMessageBox.Cancel)
         # если тарифы настроены то выполняется этот код
@@ -43,7 +63,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             self.comboBox_setting.setCurrentIndex(self.current_index)  # настойка ранее выбраного тарифа
             print(self.current_index)
             tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]  # выбор соответствующих данных
-            # по выбраному тарифу
+            # по выбраному тарифу заполняется таблица настроек тарифов
             print(tariff_dict)
             tariff_keys = list(tariff_dict.keys())  # список для ключей
             tariff_list = list(tariff_dict.values())  # список для настроек тарифов
@@ -63,7 +83,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_addRow.triggered.connect(self.tableTariff_addRow)  # добавляет строку в таблицу
         self.action_removeRow.triggered.connect(self.tableTariff_removeRow)  # удаляет строку из таблицы
         self.action_save_tariff.triggered.connect(self.tableTariff_saveTariff)  # сожраняет настройки тарифов в словарь
-        self.action_save_settings.triggered.connect(self.saveSettings)  # сохранят настройки тарифов и программы
+        self.action_save_settingTariffs.triggered.connect(self.saveSettings)  # сохранят настройки тарифов и программы
+        self.action_addShift.triggered.connect(self.addShift_tableShifts)
 
     # метод добавляет новый тариф
     def add_new_tariff(self):
@@ -133,6 +154,14 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))
             self.tableModel.setItem(row, 0, item_0)
             self.tableModel.setItem(row, 1, item_1)
+
+    def addShift_tableShifts(self):
+        L = []
+        self.shiftsNameList.append(self.dateEdit_shift.text())
+        for i in range(0, 7):
+            L.append(QtGui.QStandardItem('0'))
+        self.StIM_shiftsTable.appendColumn(L)
+        self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)
 
 
 if __name__ == "__main__":
