@@ -189,6 +189,7 @@
       </property>
       <addaction name="action_addRow_settingTable"/>
       <addaction name="action_removeRow_settingTable"/>
+      <addaction name="action_saveTariff"/>
       <addaction name="separator"/>
       <addaction name="action_saveSettingTariffs"/>
      </widget>
@@ -215,28 +216,14 @@
     </property>
     <addaction name="action_addShift"/>
     <addaction name="action_removeShift"/>
-    <addaction name="action_editTariff"/>
+    <addaction name="action_calculationShift"/>
+    <addaction name="action_editShift"/>
     <addaction name="separator"/>
     <addaction name="action_saveData"/>
    </widget>
    <addaction name="menu_settings"/>
    <addaction name="menu_shifts"/>
   </widget>
-  <action name="action">
-   <property name="text">
-    <string>Добавить тариф</string>
-   </property>
-  </action>
-  <action name="action_2">
-   <property name="text">
-    <string>Удалить тариф</string>
-   </property>
-  </action>
-  <action name="action_4">
-   <property name="text">
-    <string>Настроить тарифы</string>
-   </property>
-  </action>
   <action name="action_addTariff">
    <property name="text">
     <string>Добавить тариф</string>
@@ -342,14 +329,19 @@
     <string>Сохранить данные</string>
    </property>
   </action>
-  <action name="action_3">
-   <property name="text">
-    <string>Настроить дату</string>
-   </property>
-  </action>
-  <action name="action_editTariff">
+  <action name="action_editShift">
    <property name="text">
     <string>Редактировать смену</string>
+   </property>
+  </action>
+  <action name="action_calculationShift">
+   <property name="text">
+    <string>Расчитать смену</string>
+   </property>
+  </action>
+  <action name="action_saveTariff">
+   <property name="text">
+    <string>Сохранить тариф</string>
    </property>
   </action>
  </widget>
