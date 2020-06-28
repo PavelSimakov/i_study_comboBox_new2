@@ -17,7 +17,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # настройка dateEdit
         self.date = QtCore.QDate  # экземпляр QDate
-        self.dateEdit_shift.setDate(self.date.currentDate())  # текущая дата в editDate
+        self.dateEdit_shift.setDate(self.date.currentDate())  # устанавливаем текущую дату в editDate
 
         # вертикальный HeaderList в таблице смен
         self.shiftVerticalHeaderList = ('Яндекс', 'Gett', 'City', 'Штрафы', 'Аванс', 'Общий накат', 'Тариф',
@@ -88,6 +88,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_save_settingTariffs.triggered.connect(self.saveSettings)  # сохранят настройки тарифов и программы
         self.action_addShift.triggered.connect(self.addShift_tableShifts)  # добавляем смену
         self.action_calculationShift.triggered.connect(self.calculatedShift)  # расчитываем смену
+        self.action_saveData.triggered.connect(self.save_shifts)
 
     # метод добавляет новый тариф в comboBox
     def add_new_tariff(self):
@@ -152,14 +153,13 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         f.close()
 
     # метод активирует выбранный тариф и показывает его настройки
-    def comboBox_activated(self, v):
-        print('index', v)
+    def comboBox_activated(self):
+        #
         tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
-        print(tariff_dict)
+        #
         tariff_keys = list(tariff_dict.keys())
         tariff_list = list(tariff_dict.values())
-        print(tariff_keys)
-        print(tariff_list)
+        #
         for row in range(len(tariff_dict)):
             item_0 = QtGui.QStandardItem(str(tariff_keys[row]))
             item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))
@@ -175,6 +175,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         L.insert(6, QtGui.QStandardItem(self.comboBox_setting.currentText()))
         self.StIM_shiftsTable.appendColumn(L)
         self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)
+        return self.shiftsNameList
 
     # метод расчитывает смену
     def calculatedShift(self):
@@ -208,6 +209,19 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) \
                     - Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
         self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary)))
+
+    def save_shifts(self):
+        index = QtCore.QModelIndex()
+        date_shifts = []
+        for j in range(self.StIM_shiftsTable.columnCount(index)):
+            date_shift = []
+            for i in range(self.StIM_shiftsTable.rowCount(index)):
+                date_shift.append(self.StIM_shiftsTable.index(i, j).data())
+            date_shifts.append(date_shift)
+            self.dateMonth.update({self.shiftsNameList[j]: date_shifts[j]})
+        f = open('data/dataShifts/' + self.dateEdit_shift.text()[3:] + '.txt', 'wb')
+        pickle.dump(self.dateMonth, f)
+        f.close()
 
 
 if __name__ == "__main__":
