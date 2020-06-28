@@ -71,11 +71,33 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             tariff_list = list(tariff_dict.values())  # список для настроек тарифов
             print(tariff_keys)
             print(tariff_list)
-            for row in range(len(tariff_dict)):  # цикл для заполнения таблицы
-                item_0 = QtGui.QStandardItem(str(tariff_keys[row]))  # модель для заполнения первой колонки
-                item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))  # модель для заполнения второй колонки
-                self.table_settingTariffsModel.setItem(row, 0, item_0)  # заполняем первую колонку
-                self.table_settingTariffsModel.setItem(row, 1, item_1)  # заполняем вторую колонку
+            for i in range(len(tariff_dict)):  # цикл для заполнения таблицы
+                item_0 = QtGui.QStandardItem(str(tariff_keys[i]))  # модель для заполнения первой колонки
+                item_1 = QtGui.QStandardItem(str(tariff_list[i] * 100))  # модель для заполнения второй колонки
+                self.table_settingTariffsModel.setItem(i, 0, item_0)  # заполняем первую колонку
+                self.table_settingTariffsModel.setItem(i, 1, item_1)  # заполняем вторую колонку
+        # загружаем данные смен из сохранённого файла dateMont
+        try:
+            f = open('data/dataShifts/' + self.dateEdit_shift.text()[3:] + '.txt', 'rb')
+            self.dateMonth = pickle.load(f)
+            f.close()
+
+        except(FileNotFoundError, EOFError):
+            # диалоговое окно с информацией о отсутствии смен в текущем месяце
+            QtWidgets.QMessageBox.information(self.centralWidget(), 'Нет смен в текущем месяце.',
+                                              'Создайте смены или загрузите другой месяц.',
+                                              buttons=QtWidgets.QMessageBox.Cancel,
+                                              defaultButton=QtWidgets.QMessageBox.Cancel)
+        else:
+            self.StIM_shiftsTable.setHorizontalHeaderLabels(self.dateMonth.keys())
+            index = QtCore.QModelIndex()
+            date_list = []
+            for key in self.dateMonth.keys():
+                date_list.append(self.dateMonth[key])
+            for j in range(self.StIM_shiftsTable.columnCount(index)):
+                for i in range(self.StIM_shiftsTable.rowCount(index)):
+                    self.StIM_shiftsTable.setItem(i, j, QtGui.QStandardItem(date_list[j][i]))
+
         # действие при выборе тарифа
         self.comboBox_setting.activated[int].connect(self.comboBox_activated)
         # действия меню
@@ -89,6 +111,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_addShift.triggered.connect(self.addShift_tableShifts)  # добавляем смену
         self.action_calculationShift.triggered.connect(self.calculatedShift)  # расчитываем смену
         self.action_saveData.triggered.connect(self.save_shifts)
+        self.action_removeShift.triggered.connect(self.removeShift_tableShifts)
 
     # метод добавляет новый тариф в comboBox
     def add_new_tariff(self):
@@ -177,6 +200,12 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)
         return self.shiftsNameList
 
+    #
+    def removeShift_tableShifts(self):
+        index = self.tableView_shifts.currentIndex()
+        if index.isValid():
+            self.StIM_shiftsTable.removeColumn(index.column())
+
     # метод расчитывает смену
     def calculatedShift(self):
         fullSalary = Decimal('0')
@@ -188,7 +217,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             fullSalary = sum([Decimal(self.StIM_shiftsTable.index(0, ind.column()).data(QtCore.Qt.EditRole)),
                               Decimal(self.StIM_shiftsTable.index(1, ind.column()).data(QtCore.Qt.EditRole)),
                               Decimal(self.StIM_shiftsTable.index(2, ind.column()).data(QtCore.Qt.EditRole))])
-            # item3 = QtGui.QStandardItem(str(fullSalary))
+
             self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary)))
             print(fullSalary)
             reverse_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
@@ -213,12 +242,19 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     def save_shifts(self):
         index = QtCore.QModelIndex()
         date_shifts = []
+        shift_name_list = []
+
+        for j in range(self.StIM_shiftsTable.columnCount(index)):
+            shift_name_list.append(self.StIM_shiftsTable.horizontalHeaderItem(j).text())
+
         for j in range(self.StIM_shiftsTable.columnCount(index)):
             date_shift = []
             for i in range(self.StIM_shiftsTable.rowCount(index)):
                 date_shift.append(self.StIM_shiftsTable.index(i, j).data())
             date_shifts.append(date_shift)
-            self.dateMonth.update({self.shiftsNameList[j]: date_shifts[j]})
+            self.dateMonth.update({shift_name_list[j]: date_shifts[j]})
+        print(self.dateMonth)
+
         f = open('data/dataShifts/' + self.dateEdit_shift.text()[3:] + '.txt', 'wb')
         pickle.dump(self.dateMonth, f)
         f.close()
