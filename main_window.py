@@ -10,7 +10,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.setupUi(self)
-
+        #
         self.tariffsList = []  # для временного хранения списка тарифов
         self.current_index = None  # для хранения выбранного индекса comboBox
         self.settingTariffDict = {}  # для хранения настроек тарифов
@@ -66,11 +66,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             print(self.current_index)
             tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]  # выбор соответствующих данных
             # по выбраному тарифу заполняется таблица настроек тарифов
-            print(tariff_dict)
             tariff_keys = list(tariff_dict.keys())  # список для ключей
             tariff_list = list(tariff_dict.values())  # список для настроек тарифов
-            print(tariff_keys)
-            print(tariff_list)
             for i in range(len(tariff_dict)):  # цикл для заполнения таблицы
                 item_0 = QtGui.QStandardItem(str(tariff_keys[i]))  # модель для заполнения первой колонки
                 item_1 = QtGui.QStandardItem(str(tariff_list[i] * 100))  # модель для заполнения второй колонки
@@ -78,29 +75,31 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                 self.table_settingTariffsModel.setItem(i, 1, item_1)  # заполняем вторую колонку
         # загружаем данные смен из сохранённого файла dateMont
         try:
-            f = open('data/dataShifts/' + self.dateEdit_shift.text()[3:] + '.txt', 'rb')
-            self.dateMonth = pickle.load(f)
-            f.close()
-
+            f = open('data/dataShifts/' + self.dateEdit_shift.text()[3:] + '.txt', 'rb')  # открываем файл сосменами
+            # текущего месяца
+            self.dateMonth = pickle.load(f)  # загружаем файл в dateMonth
+            f.close()  # закрываем файл
+        # если файла не существует выполняется этот код
         except(FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии смен в текущем месяце
             QtWidgets.QMessageBox.information(self.centralWidget(), 'Нет смен в текущем месяце.',
                                               'Создайте смены или загрузите другой месяц.',
                                               buttons=QtWidgets.QMessageBox.Cancel,
                                               defaultButton=QtWidgets.QMessageBox.Cancel)
-
+        # если файл существует то заполняем таблицу смен
         else:
-            self.StIM_shiftsTable.setHorizontalHeaderLabels(self.dateMonth.keys())
-            index = QtCore.QModelIndex()
-            date_list = []
-            for key in self.dateMonth.keys():
-                date_list.append(self.dateMonth[key])
-            for j in range(self.StIM_shiftsTable.columnCount(index)):
-                for i in range(self.StIM_shiftsTable.rowCount(index)):
-                    self.StIM_shiftsTable.setItem(i, j, QtGui.QStandardItem(date_list[j][i]))
+            self.StIM_shiftsTable.setHorizontalHeaderLabels(self.dateMonth.keys())  # список горизонтальных заголовков
+            index = QtCore.QModelIndex()  # просто и ндекс
+            date_list = []  # список для временного хранения данных по сменам
+            for key in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
+                date_list.append(self.dateMonth[key])  # заполняем список с данными по сменам
+            for j in range(self.StIM_shiftsTable.columnCount(index)):  # цикл по колонкам
+                for i in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
+                    self.StIM_shiftsTable.setItem(i, j, QtGui.QStandardItem(date_list[j][i]))  # заполнение таблицы
+                    # данными по сменам
 
         # действие при выборе тарифа
-        self.comboBox_setting.activated[int].connect(self.comboBox_activated)
+        self.comboBox_setting.activated[str].connect(self.comboBox_activated)  # смена тарифа в comboBox
         # действия меню
         self.action_addTariff.triggered.connect(self.add_new_tariff)  # добавляет тариф
         self.action_removeTariff.triggered.connect(self.remove_tariff)  # удаляет тариф
@@ -111,30 +110,29 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_save_settingTariffs.triggered.connect(self.saveSettings)  # сохранят настройки тарифов и программы
         self.action_addShift.triggered.connect(self.addShift_tableShifts)  # добавляем смену
         self.action_calculationShift.triggered.connect(self.calculatedShift)  # расчитываем смену
-        self.action_saveData.triggered.connect(self.save_shifts)
-        self.action_removeShift.triggered.connect(self.removeShift_tableShifts)
+        self.action_saveData.triggered.connect(self.save_shifts)  # сохраняем данные по сменам
+        self.action_removeShift.triggered.connect(self.removeShift_tableShifts)  # удаляем смену
 
     # метод добавляет новый тариф в comboBox
     def add_new_tariff(self):
-        self.comboBox_setting.setEditable(True)
-        self.comboBox_setting.setEditText('Новый тариф')
+        self.comboBox_setting.setEditable(True)  # разрешение на редактирование
+        self.comboBox_setting.setEditText('Новый тариф')  # добавляем "Новый тариф"
 
     # метод удаляет тариф
     def remove_tariff(self):
-        ind = self.comboBox_setting.currentIndex()
-        if self.comboBox_setting.currentText() in self.settingTariffDict:
-            del self.settingTariffDict[self.comboBox_setting.currentText()]
-        self.comboBox_setting.removeItem(ind)
-        print(self.settingTariffDict)
+        ind = self.comboBox_setting.currentIndex()  # индекс выбранного тарифа
+        if self.comboBox_setting.currentText() in self.settingTariffDict:  # если название тарифа есть в списке то
+            del self.settingTariffDict[self.comboBox_setting.currentText()]  # удаляем тариф из списка
+        self.comboBox_setting.removeItem(ind)  # удаляем название тарифа из comboBox
 
     # метод сохраняет названия тарифов в список
     def save_list_tariffs(self):
-        self.comboBox_setting.setEditable(False)
-        self.tariffsList.clear()
-        for i in range(self.comboBox_setting.count()):
-            self.tariffsList.append(self.comboBox_setting.itemText(i))
-        print(self.tariffsList)
-        return self.tariffsList
+        self.comboBox_setting.setEditable(False)  #
+        self.tariffsList.clear()  #
+        for i in range(self.comboBox_setting.count()):  #
+            self.tariffsList.append(self.comboBox_setting.itemText(i))  #
+        print(self.tariffsList)  #
+        return self.tariffsList  #
 
     # метод добавляет строку в таблицу настроек тарифов
     def tableTariff_addRow(self):
@@ -177,9 +175,9 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         f.close()
 
     # метод активирует выбранный тариф и показывает его настройки
-    def comboBox_activated(self):
+    def comboBox_activated(self, v):
         #
-        tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
+        tariff_dict = self.settingTariffDict[v]
         #
         tariff_keys = list(tariff_dict.keys())
         tariff_list = list(tariff_dict.values())
