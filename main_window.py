@@ -88,6 +88,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                                               'Создайте смены или загрузите другой месяц.',
                                               buttons=QtWidgets.QMessageBox.Cancel,
                                               defaultButton=QtWidgets.QMessageBox.Cancel)
+
         else:
             self.StIM_shiftsTable.setHorizontalHeaderLabels(self.dateMonth.keys())
             index = QtCore.QModelIndex()
@@ -188,6 +189,12 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))
             self.table_settingTariffsModel.setItem(row, 0, item_0)
             self.table_settingTariffsModel.setItem(row, 1, item_1)
+
+        ind = self.tableView_shifts.currentIndex()
+        sel = self.tableView_shifts.selectionModel()
+
+        if sel.isColumnSelected(ind.column(), QtCore.QModelIndex()):
+            self.StIM_shiftsTable.setItem(6, ind.column(), QtGui.QStandardItem(self.comboBox_setting.currentText()))
 
     # метод добавлят смену в таблицу
     def addShift_tableShifts(self):
