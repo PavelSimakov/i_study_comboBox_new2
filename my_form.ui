@@ -6,78 +6,250 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>627</width>
-    <height>356</height>
+    <width>719</width>
+    <height>400</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
   </property>
   <property name="font">
    <font>
+    <family>C059 [UKWN]</family>
     <pointsize>12</pointsize>
     <weight>75</weight>
     <italic>true</italic>
     <bold>true</bold>
    </font>
   </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Моя зарплата в такси</string>
   </property>
-  <property name="dockOptions">
-   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks|QMainWindow::GroupedDragging|QMainWindow::VerticalTabs</set>
-  </property>
-  <property name="unifiedTitleAndToolBarOnMac">
-   <bool>true</bool>
-  </property>
-  <widget class="QWidget" name="central_widget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+  <widget class="QWidget" name="centralWidget">
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QTableView" name="tableView_shifts"/>
+     <widget class="QTableView" name="tableView_shifts">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>300</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>C059 [UKWN]</family>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideMiddle</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="status_bar">
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>719</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>C059 [UKWN]</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <widget class="QMenu" name="menu_Tariffs">
+    <property name="font">
+     <font>
+      <family>C059 [UKWN]</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="title">
+     <string>Тарифы</string>
+    </property>
+    <widget class="QMenu" name="menu_settingTariffs">
+     <property name="font">
+      <font>
+       <family>C059 [UKWN]</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="title">
+      <string>Настроить тарифы</string>
+     </property>
+     <addaction name="action_addRow"/>
+     <addaction name="action_removeRow"/>
+     <addaction name="separator"/>
+     <addaction name="action_saveTariff"/>
+     <addaction name="action_saveSettings"/>
+    </widget>
+    <addaction name="action_addTariff"/>
+    <addaction name="action_removeTariff"/>
+    <addaction name="separator"/>
+    <addaction name="menu_settingTariffs"/>
+   </widget>
+   <widget class="QMenu" name="menuShifts">
+    <property name="font">
+     <font>
+      <family>C059 [UKWN]</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="title">
+     <string>Смены</string>
+    </property>
+    <addaction name="action_addShift"/>
+    <addaction name="action_removeShift"/>
+    <addaction name="separator"/>
+    <addaction name="action_calculationShift"/>
+    <addaction name="action_saveData"/>
+   </widget>
+   <addaction name="menu_Tariffs"/>
+   <addaction name="menuShifts"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
    <property name="sizeGripEnabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QDockWidget" name="dockWidget_setting">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>250</width>
+     <height>284</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>250</width>
+     <height>300</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>C059 [UKWN]</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetVerticalTitleBar</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+    <set>Qt::LeftDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Нстройка тарифа</string>
+    <string>Настройки тарифов</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,5">
-       <property name="spacing">
-        <number>20</number>
-       </property>
-       <property name="leftMargin">
-        <number>5</number>
-       </property>
-       <property name="topMargin">
-        <number>5</number>
-       </property>
-       <property name="rightMargin">
-        <number>5</number>
-       </property>
-       <property name="bottomMargin">
-        <number>5</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QDateEdit" name="dateEdit_shift">
+        <widget class="QDateEdit" name="dateEdit_shifts">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>255</horstretch>
+           <verstretch>30</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>C059 [UKWN]</family>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::NoContextMenu</enum>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::ImhDigitsOnly</set>
+         </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
          </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::NoButtons</enum>
+         </property>
+         <property name="currentSection">
+          <enum>QDateTimeEdit::DaySection</enum>
          </property>
          <property name="displayFormat">
           <string>dd.MM.yy</string>
@@ -89,16 +261,28 @@
        </item>
        <item>
         <widget class="QComboBox" name="comboBox_setting">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <family>C059 [UKWN]</family>
            <weight>75</weight>
            <italic>true</italic>
            <bold>true</bold>
           </font>
          </property>
-         <property name="inputMethodHints">
-          <set>Qt::ImhDigitsOnly</set>
+         <property name="contextMenuPolicy">
+          <enum>Qt::NoContextMenu</enum>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="editable">
+          <bool>false</bool>
          </property>
          <property name="maxCount">
           <number>10</number>
@@ -107,32 +291,41 @@
           <enum>QComboBox::AdjustToContents</enum>
          </property>
          <property name="minimumContentsLength">
-          <number>10</number>
+          <number>5</number>
+         </property>
+         <property name="modelColumn">
+          <number>0</number>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QTableView" name="tableView">
+       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+        <widget class="QTableView" name="tableView_setting">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="font">
           <font>
-           <family>MS Shell Dlg 2</family>
+           <family>C059 [UKWN]</family>
            <pointsize>12</pointsize>
            <weight>75</weight>
            <italic>true</italic>
            <bold>true</bold>
           </font>
          </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::NoContextMenu</enum>
+         </property>
          <property name="inputMethodHints">
           <set>Qt::ImhDigitsOnly</set>
          </property>
-         <property name="sizeAdjustPolicy">
-          <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+         <property name="textElideMode">
+          <enum>Qt::ElideMiddle</enum>
          </property>
-         <attribute name="horizontalHeaderMinimumSectionSize">
-          <number>50</number>
-         </attribute>
-         <attribute name="verticalHeaderDefaultSectionSize">
-          <number>39</number>
+         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+          <bool>true</bool>
          </attribute>
         </widget>
        </item>
@@ -141,105 +334,27 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menu_bar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>627</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menu_settings">
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <italic>true</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="title">
-     <string>Тарифы</string>
-    </property>
-    <widget class="QMenu" name="menu_tariffs">
-     <property name="font">
-      <font>
-       <family>Noto Sans</family>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <italic>true</italic>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="title">
-      <string>Настроить тарифы</string>
-     </property>
-     <widget class="QMenu" name="menu_settingTariffs">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <italic>true</italic>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="title">
-       <string>Настройка тарифов</string>
-      </property>
-      <addaction name="action_addRow_settingTable"/>
-      <addaction name="action_removeRow_settingTable"/>
-      <addaction name="action_saveTariff"/>
-      <addaction name="separator"/>
-      <addaction name="action_saveSettingTariffs"/>
-     </widget>
-     <addaction name="action_addTariff"/>
-     <addaction name="action_removeTariff"/>
-     <addaction name="separator"/>
-     <addaction name="menu_settingTariffs"/>
-    </widget>
-    <addaction name="menu_tariffs"/>
-    <addaction name="action_save_list_tariffs"/>
-    <addaction name="separator"/>
-   </widget>
-   <widget class="QMenu" name="menu_shifts">
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <italic>true</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="title">
-     <string>Рабочие смены</string>
-    </property>
-    <addaction name="action_addShift"/>
-    <addaction name="action_removeShift"/>
-    <addaction name="action_calculationShift"/>
-    <addaction name="action_editShift"/>
-    <addaction name="separator"/>
-    <addaction name="action_saveData"/>
-   </widget>
-   <addaction name="menu_settings"/>
-   <addaction name="menu_shifts"/>
-  </widget>
   <action name="action_addTariff">
    <property name="text">
     <string>Добавить тариф</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>C059 [UKWN]</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
    </property>
   </action>
   <action name="action_removeTariff">
    <property name="text">
     <string>Удалить тариф</string>
    </property>
-  </action>
-  <action name="action_save_list_tariffs">
-   <property name="text">
-    <string>Сохранить тарифы</string>
-   </property>
    <property name="font">
     <font>
+     <family>C059 [UKWN]</family>
      <pointsize>12</pointsize>
      <weight>75</weight>
      <italic>true</italic>
@@ -249,10 +364,11 @@
   </action>
   <action name="action_addRow">
    <property name="text">
-    <string>Добавить строку</string>
+    <string>Добвить строку</string>
    </property>
    <property name="font">
     <font>
+     <family>C059 [UKWN]</family>
      <pointsize>12</pointsize>
      <weight>75</weight>
      <italic>true</italic>
@@ -264,23 +380,9 @@
    <property name="text">
     <string>Удалить строку</string>
    </property>
-  </action>
-  <action name="action_save_tariff">
-   <property name="text">
-    <string>Сохранить тариф</string>
-   </property>
-  </action>
-  <action name="action_save_settingTariffs">
-   <property name="text">
-    <string>Сохранить тарифы</string>
-   </property>
-  </action>
-  <action name="action_addRow_settingTable">
-   <property name="text">
-    <string>Добавить строку</string>
-   </property>
    <property name="font">
     <font>
+     <family>C059 [UKWN]</family>
      <pointsize>12</pointsize>
      <weight>75</weight>
      <italic>true</italic>
@@ -288,50 +390,42 @@
     </font>
    </property>
   </action>
-  <action name="action_removeRow_settingTable">
+  <action name="action_saveTariff">
    <property name="text">
-    <string>Удалить строку</string>
+    <string>Сохранить тариф</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>C059 [UKWN]</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
    </property>
   </action>
-  <action name="action_saveSettingTariffs">
+  <action name="action_saveSettings">
    <property name="text">
-    <string>Сохранить настройки тарифов</string>
+    <string>Сохранить настройки</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>C059 [UKWN]</family>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
    </property>
   </action>
   <action name="action_addShift">
    <property name="text">
     <string>Добавить смену</string>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-     <weight>75</weight>
-     <italic>true</italic>
-     <bold>true</bold>
-    </font>
-   </property>
   </action>
   <action name="action_removeShift">
    <property name="text">
     <string>Удалить смену</string>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>12</pointsize>
-     <weight>75</weight>
-     <italic>true</italic>
-     <bold>true</bold>
-    </font>
-   </property>
-  </action>
-  <action name="action_saveData">
-   <property name="text">
-    <string>Сохранить данные</string>
-   </property>
-  </action>
-  <action name="action_editShift">
-   <property name="text">
-    <string>Редактировать смену</string>
    </property>
   </action>
   <action name="action_calculationShift">
@@ -339,9 +433,9 @@
     <string>Расчитать смену</string>
    </property>
   </action>
-  <action name="action_saveTariff">
+  <action name="action_saveData">
    <property name="text">
-    <string>Сохранить тариф</string>
+    <string>Сохранить данные</string>
    </property>
   </action>
  </widget>
