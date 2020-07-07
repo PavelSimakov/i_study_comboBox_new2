@@ -2,7 +2,6 @@ import pickle
 from decimal import Decimal
 
 from PyQt5 import QtCore, QtWidgets, QtGui
-
 import my_form
 
 
