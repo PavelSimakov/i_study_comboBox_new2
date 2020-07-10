@@ -13,6 +13,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.tariffsList = []  # для временного хранения списка тарифов
         self.current_index = None  # для хранения выбранного индекса comboBox
         self.settingTariffDict = {}  # для хранения настроек тарифов
+        self.f_salaryOfMonth = 0
 
         # настройка dateEdit
         self.date = QtCore.QDate  # экземпляр QDate
@@ -89,7 +90,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # если файл существует то заполняем таблицу смен
         else:
             self.StIM_shiftsTable.setHorizontalHeaderLabels(self.dateMonth.keys())  # список горизонтальных заголовков
-            index = QtCore.QModelIndex()  # просто и ндекс
+            index = QtCore.QModelIndex()  # просто индекс
             date_list = []  # список для временного хранения данных по сменам
             for key in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
                 date_list.append(self.dateMonth[key])  # заполняем список с данными по сменам
@@ -97,6 +98,9 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                 for i in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
                     self.StIM_shiftsTable.setItem(i, j, QtGui.QStandardItem(date_list[j][i]))  # заполнение таблицы
                     # данными по сменам
+            for i in range(len(date_list)):
+                self.f_salaryOfMonth += Decimal(date_list[i][8])
+            self.label_salaryOfMonth.setText(str(self.f_salaryOfMonth))
 
         # действие при выборе тарифа
         self.comboBox_setting.activated[str].connect(self.comboBox_activated)  # смена тарифа в comboBox
@@ -235,6 +239,11 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) - \
                     Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
         self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary)))
+        ind_sum = QtCore.QModelIndex()
+
+        for i in range(self.StIM_shiftsTable.columnCount(ind_sum)):
+            self.f_salaryOfMonth += Decimal(self.StIM_shiftsTable.index(8, i).data(QtCore.Qt.EditRole))
+        self.label_salaryOfMonth.setText(str(self.f_salaryOfMonth) + " руб")
 
     def save_shifts(self):
         index = QtCore.QModelIndex()
