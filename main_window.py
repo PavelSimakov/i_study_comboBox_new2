@@ -198,16 +198,14 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     # метод добавлят смену в таблицу
     def addShift_tableShifts(self):
         L = []
-        # self.shiftsNameList.append(self.dateEdit_shifts.text())
-        index = QtCore.QModelIndex()
-        self.StIM_shiftsTable.setHorizontalHeaderItem(self.StIM_shiftsTable.columnCount(index),
-                                                      QtGui.QStandardItem(self.dateEdit_shifts.text()))
         for i in range(0, 8):
             L.append(QtGui.QStandardItem('0'))
         L.insert(6, QtGui.QStandardItem(self.comboBox_setting.currentText()))
         self.StIM_shiftsTable.appendColumn(L)
-        # self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)
-        return self.shiftsNameList
+        self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)
+        index = QtCore.QModelIndex()
+        self.StIM_shiftsTable.setHorizontalHeaderItem(self.StIM_shiftsTable.columnCount(index) - 1,
+                                                      QtGui.QStandardItem(self.dateEdit_shifts.text()))
 
     #
     def removeShift_tableShifts(self):
