@@ -45,11 +45,12 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # если файлы, с сохранёнными настройками, существуют то они загружаются для дальнейшего использования
         try:
-            f = open('data/settingTariffDict.txt', 'rb')  # открываем файл с настройками тарифа
+            f = open('data/dataSetting/settingTariffDict.txt', 'rb')  # открываем файл с настройками тарифа
             self.settingTariffDict = pickle.load(f)  # загружаем файл в словарь settingTariffDict
             f.close()  # закрываем файл
             print(self.settingTariffDict)
-            f = open('data/comboBox_currentIndex.txt', 'rb')  # открываем файл с настройкой выбранного тарифа
+            f = open('data/dataSetting/comboBox_currentIndex.txt', 'rb')  # открываем файл с настройкой
+            # выбранного тарифа
             self.current_index = pickle.load(f)  # загружаем файл в current_index
             f.close()  # закрываем файл
         # если  файлов с настпройками тарифов нет, то выполняется этот код
@@ -89,7 +90,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                                               defaultButton=QtWidgets.QMessageBox.Cancel)
         # если файл существует то заполняем таблицу смен
         else:
-            self.StIM_shiftsTable.setHorizontalHeaderLabels(self.dateMonth.keys())  # список горизонтальных заголовков
+            self.shiftsNameList = list(self.dateMonth.keys())
+            self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)  # список горизонтальных заголовков
             index = QtCore.QModelIndex()  # просто индекс
             date_list = []  # список для временного хранения данных по сменам
             for key in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
@@ -101,6 +103,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             for i in range(len(date_list)):
                 self.f_salaryOfMonth += Decimal(date_list[i][8])
             self.label_salaryOfMonth.setText(str(self.f_salaryOfMonth))
+        print(self.tariffsList)
 
         # действие при выборе тарифа
         self.comboBox_setting.activated[str].connect(self.comboBox_activated)  # смена тарифа в comboBox
@@ -161,11 +164,11 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
     # метод сохраняет настройки тарифов в файлы
     def saveSettings(self):
-        f = open('data/settingTariffDict.txt', 'wb')
+        f = open('data/dataSetting/settingTariffDict.txt', 'wb')
         pickle.dump(self.settingTariffDict, f)
         f.close()
         current_index = self.comboBox_setting.currentIndex()
-        f = open('data/comboBox_currentIndex.txt', 'wb')
+        f = open('data/dataSetting/comboBox_currentIndex.txt', 'wb')
         pickle.dump(current_index, f)
         print(current_index)
         f.close()
@@ -195,12 +198,15 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     # метод добавлят смену в таблицу
     def addShift_tableShifts(self):
         L = []
-        self.shiftsNameList.append(self.dateEdit_shifts.text())
+        # self.shiftsNameList.append(self.dateEdit_shifts.text())
+        index = QtCore.QModelIndex()
+        self.StIM_shiftsTable.setHorizontalHeaderItem(self.StIM_shiftsTable.columnCount(index),
+                                                      QtGui.QStandardItem(self.dateEdit_shifts.text()))
         for i in range(0, 8):
             L.append(QtGui.QStandardItem('0'))
         L.insert(6, QtGui.QStandardItem(self.comboBox_setting.currentText()))
         self.StIM_shiftsTable.appendColumn(L)
-        self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)
+        # self.StIM_shiftsTable.setHorizontalHeaderLabels(self.shiftsNameList)
         return self.shiftsNameList
 
     #
@@ -271,5 +277,10 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     window = MyWindow()  # Создаем экземпляр класса
+    desktop = QtWidgets.QApplication.desktop()
+    window.move(desktop.availableGeometry().center() - window.rect().center())
+    ico = QtGui.QIcon('data/taxi_icon_72.png'
+                      )
+    window.setWindowIcon(ico)
     window.show()  # Отображаем окно
     sys.exit(app.exec_())  # Запускаем цикл обработки событий

@@ -14,7 +14,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(719, 400)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                           QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -96,7 +97,8 @@ class Ui_MainWindow(object):
         self.statusBar.setObjectName("statusBar")
         MainWindow.setStatusBar(self.statusBar)
         self.dockWidget_setting = QtWidgets.QDockWidget(MainWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.dockWidget_setting.sizePolicy().hasHeightForWidth())
@@ -110,7 +112,8 @@ class Ui_MainWindow(object):
         font.setItalic(True)
         font.setWeight(75)
         self.dockWidget_setting.setFont(font)
-        self.dockWidget_setting.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable|QtWidgets.QDockWidget.DockWidgetVerticalTitleBar)
+        self.dockWidget_setting.setFeatures(
+            QtWidgets.QDockWidget.DockWidgetClosable | QtWidgets.QDockWidget.DockWidgetVerticalTitleBar)
         self.dockWidget_setting.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
         self.dockWidget_setting.setObjectName("dockWidget_setting")
         self.dockWidgetContents = QtWidgets.QWidget()
@@ -163,7 +166,8 @@ class Ui_MainWindow(object):
         self.comboBox_setting.setObjectName("comboBox_setting")
         self.verticalLayout.addWidget(self.comboBox_setting)
         self.tableView_setting = QtWidgets.QTableView(self.dockWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                           QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tableView_setting.sizePolicy().hasHeightForWidth())
@@ -180,17 +184,19 @@ class Ui_MainWindow(object):
         self.tableView_setting.setTextElideMode(QtCore.Qt.ElideMiddle)
         self.tableView_setting.setObjectName("tableView_setting")
         self.tableView_setting.horizontalHeader().setSortIndicatorShown(True)
-        self.verticalLayout.addWidget(self.tableView_setting, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.verticalLayout.addWidget(self.tableView_setting, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.dockWidget_setting.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget_setting)
         self.dockWidget_salaryShow = QtWidgets.QDockWidget(MainWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.dockWidget_salaryShow.sizePolicy().hasHeightForWidth())
         self.dockWidget_salaryShow.setSizePolicy(sizePolicy)
-        self.dockWidget_salaryShow.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable|QtWidgets.QDockWidget.DockWidgetVerticalTitleBar)
+        self.dockWidget_salaryShow.setFeatures(
+            QtWidgets.QDockWidget.DockWidgetClosable | QtWidgets.QDockWidget.DockWidgetVerticalTitleBar)
         self.dockWidget_salaryShow.setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
         self.dockWidget_salaryShow.setObjectName("dockWidget_salaryShow")
         self.dockWidgetContents_2 = QtWidgets.QWidget()
