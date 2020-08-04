@@ -11,11 +11,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
+# noinspection PyAttributeOutsideInit
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 553)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -98,7 +100,8 @@ class Ui_MainWindow(object):
         self.statusBar.setObjectName("statusBar")
         MainWindow.setStatusBar(self.statusBar)
         self.dockWidget_setting = QtWidgets.QDockWidget(MainWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.dockWidget_setting.sizePolicy().hasHeightForWidth())
@@ -120,7 +123,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.dockWidgetContents)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.tabWidget_setting = QtWidgets.QTabWidget(self.dockWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.tabWidget_setting.sizePolicy().hasHeightForWidth())
@@ -194,7 +198,8 @@ class Ui_MainWindow(object):
         self.comboBox_setting.setObjectName("comboBox_setting")
         self.verticalLayout.addWidget(self.comboBox_setting)
         self.label_4 = QtWidgets.QLabel(self.layoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
@@ -202,7 +207,8 @@ class Ui_MainWindow(object):
         self.label_4.setObjectName("label_4")
         self.verticalLayout.addWidget(self.label_4)
         self.tableView_setting = QtWidgets.QTableView(self.layoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tableView_setting.sizePolicy().hasHeightForWidth())
@@ -389,14 +395,17 @@ class Ui_MainWindow(object):
         self.dateEdit_shifts.setDisplayFormat(_translate("MainWindow", "dd.MM.yy"))
         self.label_3.setText(_translate("MainWindow", "Тариф"))
         self.label_4.setText(_translate("MainWindow", "Настр. тарифа"))
-        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab), _translate("MainWindow", "Настройки"))
+        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab), _translate("MainWindow",
+                                                                                               "Настройки"))
         self.label_5.setText(_translate("MainWindow", "Зарплата"))
         self.label_7.setText(_translate("MainWindow", "Получено"))
         self.label_6.setText(_translate("MainWindow", "Долг"))
         self.label_2.setText(_translate("MainWindow", "Выплата"))
         self.doubleSpinBox.setSuffix(_translate("MainWindow", "руб"))
-        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab_2), _translate("MainWindow", "Зарплата"))
-        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab_3), _translate("MainWindow", "Временной период"))
+        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab_2), _translate("MainWindow",
+                                                                                                 "Зарплата"))
+        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab_3), _translate("MainWindow",
+                                                                                                 "Временной период"))
         self.action_addTariff.setText(_translate("MainWindow", "Добавить тариф"))
         self.action_removeTariff.setText(_translate("MainWindow", "Удалить тариф"))
         self.action_addRow.setText(_translate("MainWindow", "Добвить строку"))

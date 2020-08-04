@@ -20,7 +20,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # вертикальный HeaderList в таблице смен
         self.shiftVerticalHeaderList = ('Яндекс', 'Gett', 'City', 'Штрафы', 'Аванс', 'Общий накат', 'Тариф',
-                                        'Мой процент', 'За смену')
+                                        'Мой процент', 'За смену', 'Выплата')
         self.dateMonth = {}  # словарь для хранения данных по сменам за месяц
 
         # настройка comboBox
@@ -30,7 +30,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # подготовка таблицы для настройки тарифов
         self.table_settingTariffsModel = QtGui.QStandardItemModel()  # модель для талицы настроек тарифов
         self.tableView_setting.setModel(self.table_settingTariffsModel)  # подключаем модель к таблице
-        self.tableHeaderList = ['Накат', 'Проценты']  # список названий колонок
+        self.tableHeaderList = ['Накат', 'Проц.']  # список названий колонок
         self.table_settingTariffsModel.setHorizontalHeaderLabels(self.tableHeaderList)  # подключаем названия колонок
         # к таблице
 
@@ -53,7 +53,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # если  файлов с настпройками тарифов нет, то выполняется этот код
         except (FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии настроеных тарифов
-            QtWidgets.QMessageBox.information(self.centralWidget, 'Тарифы не настроены!',
+            QtWidgets.QMessageBox.information(window, 'Тарифы не настроены!',
                                               'Вам нужно настроить тарифы для расчёта зарплаты.',
                                               buttons=QtWidgets.QMessageBox.Cancel,
                                               defaultButton=QtWidgets.QMessageBox.Cancel)
@@ -81,7 +81,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # если файла не существует выполняется этот код
         except(FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии смен в текущем месяце
-            QtWidgets.QMessageBox.information(self.centralWidget, 'Нет смен в текущем месяце.',
+            QtWidgets.QMessageBox.information(window, 'Нет смен в текущем месяце.',
                                               'Создайте смены или загрузите другой месяц.',
                                               buttons=QtWidgets.QMessageBox.Cancel,
                                               defaultButton=QtWidgets.QMessageBox.Cancel)
@@ -151,7 +151,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         print(name_tariff)
         ind = QtCore.QModelIndex()
         for i in range(0, self.table_settingTariffsModel.rowCount(ind)):
-            key_list.append(int(self.table_settingTariffsModel.index(i, 0).data()))
+            key_list.append(str(self.table_settingTariffsModel.index(i, 0).data()))
             date_list.append(Decimal(self.table_settingTariffsModel.index(i, 1).data()) / Decimal(100))
         settingDateDict = dict(zip(key_list, date_list))
         print(settingDateDict.values())
@@ -195,11 +195,11 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
     # метод добавлят смену в таблицу
     def addShift_tableShifts(self):
-        L = []
-        for i in range(0, 8):
-            L.append(QtGui.QStandardItem('0'))
-        L.insert(6, QtGui.QStandardItem(self.comboBox_setting.currentText()))
-        self.StIM_shiftsTable.appendColumn(L)
+        list_row = []
+        for i in range(0, 9):
+            list_row.append(QtGui.QStandardItem('0'))
+        list_row.insert(6, QtGui.QStandardItem(self.comboBox_setting.currentText()))
+        self.StIM_shiftsTable.appendColumn(list_row)
         index = QtCore.QModelIndex()
         self.StIM_shiftsTable.setHorizontalHeaderItem(self.StIM_shiftsTable.columnCount(index) - 1,
                                                       QtGui.QStandardItem(self.dateEdit_shifts.text()))

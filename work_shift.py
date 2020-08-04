@@ -1,0 +1,2 @@
+class WorkShift:
+    pass
