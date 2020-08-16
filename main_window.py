@@ -53,10 +53,9 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # если  файлов с настпройками тарифов нет, то выполняется этот код
         except (FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии настроеных тарифов
-            QtWidgets.QMessageBox.information(window, 'Тарифы не настроены!',
+            QtWidgets.QMessageBox.information(self.centralWidget, 'Тарифы не настроены!',
                                               'Вам нужно настроить тарифы для расчёта зарплаты.',
-                                              buttons=QtWidgets.QMessageBox.Cancel,
-                                              defaultButton=QtWidgets.QMessageBox.Cancel)
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
         # если тарифы настроены то выполняется этот код
         else:
             self.comboBox_setting.addItems(self.settingTariffDict.keys())  # заполнение comboBox названиями тарифов
@@ -81,10 +80,9 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # если файла не существует выполняется этот код
         except(FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии смен в текущем месяце
-            QtWidgets.QMessageBox.information(window, 'Нет смен в текущем месяце.',
+            QtWidgets.QMessageBox.information(self.centralWidget, 'Нет смен в текущем месяце.',
                                               'Создайте смены или загрузите другой месяц.',
-                                              buttons=QtWidgets.QMessageBox.Cancel,
-                                              defaultButton=QtWidgets.QMessageBox.Cancel)
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
         # если файл существует то заполняем таблицу смен
         else:
             shiftsNameList = list(self.dateMonth.keys())
@@ -210,7 +208,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         if index.isValid():
             f_salary = Decimal(self.label_salary.text()[:-4].replace(',', '.')) - Decimal(
                 self.StIM_shiftsTable.index(8, index.column()).data(QtCore.Qt.EditRole))
-            self.label_salary.setText(str(f_salary))
+            self.label_salary.setText(str(f_salary) + ' руб')
             self.StIM_shiftsTable.removeColumn(index.column())
 
     # метод расчитывает смену
