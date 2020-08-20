@@ -1,4 +1,5 @@
 import pickle
+import time
 from decimal import Decimal
 
 from PyQt5 import QtCore, QtWidgets, QtGui
@@ -114,6 +115,13 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_calculationShift.triggered.connect(self.calculatedShift)  # расчитываем смену
         self.action_saveData.triggered.connect(self.save_shifts)  # сохраняем данные по сменам
         self.action_removeShift.triggered.connect(self.removeShift_tableShifts)  # удаляем смену
+
+    def load_data(self, sp):
+        for i in range(1, 11):  # Имитируем процесс
+            time.sleep(2)  # Что-то загружаем
+            sp.showMessage("Загрузка данных... {0}%".format(i * 10), QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom,
+                           QtCore.Qt.white)
+            QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
 
     # метод добавляет новый тариф в comboBox
     def add_new_tariff(self):
@@ -274,10 +282,16 @@ if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
+    splash = QtWidgets.QSplashScreen(QtGui.QPixmap("IMG1.jpg"))
+    splash.showMessage("Загрузка данных... 0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.white)
+    splash.show()  # Отображаем заставку
+    QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
     window = MyWindow()  # Создаем экземпляр класса
     desktop = QtWidgets.QApplication.desktop()
     window.move(desktop.availableGeometry().center() - window.rect().center())
     ico = QtGui.QIcon('data/taxi_icon_72.png')
     window.setWindowIcon(ico)
+    window.load_data(splash)  # Загружаем данные
     window.show()  # Отображаем окно
+    splash.finish(window)  # Скрываем заставку
     sys.exit(app.exec_())  # Запускаем цикл обработки событий
