@@ -6,6 +6,14 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 import my_form
 
 
+def load_data(sp):
+    for i in range(1, 6):  # Имитируем процесс
+        time.sleep(2)  # Что-то загружаем
+        sp.showMessage("Загрузка данных... {0}%".format(i * 20), QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom,
+                       QtCore.Qt.white)
+        QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
+
+
 class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
@@ -54,7 +62,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # если  файлов с настпройками тарифов нет, то выполняется этот код
         except (FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии настроеных тарифов
-            QtWidgets.QMessageBox.information(self.centralWidget, 'Тарифы не настроены!',
+            QtWidgets.QMessageBox.information(splash, 'Тарифы не настроены!',
                                               'Вам нужно настроить тарифы для расчёта зарплаты.',
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         # если тарифы настроены то выполняется этот код
@@ -67,10 +75,22 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             tariff_keys = list(tariff_dict.keys())  # список для ключей
             tariff_list = list(tariff_dict.values())  # список для настроек тарифов
             for i in range(len(tariff_dict)):  # цикл для заполнения таблицы
-                item_0 = QtGui.QStandardItem(str(tariff_keys[i]))  # модель для заполнения первой колонки
-                item_1 = QtGui.QStandardItem(str(tariff_list[i] * 100))  # модель для заполнения второй колонки
-                self.table_settingTariffsModel.setItem(i, 0, item_0)  # заполняем первую колонку
-                self.table_settingTariffsModel.setItem(i, 1, item_1)  # заполняем вторую колонку
+                if type(tariff_list[i]) == list:
+                    percent_list = ''
+                    for j in range(len(tariff_list[i])):
+                        percent = str(tariff_list[i][j] * 100)
+                        percent_list += percent + ' / '
+                        percent_list_final = percent_list[:-3]
+                    print(percent_list_final)
+                    item_l0 = QtGui.QStandardItem(str(tariff_keys[i]))
+                    item_l1 = QtGui.QStandardItem(percent_list_final)
+                    self.table_settingTariffsModel.setItem(i, 0, item_l0)
+                    self.table_settingTariffsModel.setItem(i, 1, item_l1)
+                else:
+                    item_0 = QtGui.QStandardItem(str(tariff_keys[i]))  # модель для заполнения первой колонки
+                    item_1 = QtGui.QStandardItem(str(tariff_list[i] * 100))  # модель для заполнения второй колонки
+                    self.table_settingTariffsModel.setItem(i, 0, item_0)  # заполняем первую колонки
+                    self.table_settingTariffsModel.setItem(i, 1, item_1)  # заполняем вторую колонку
 
         # загружаем данные смен из сохранённого файла dateMont
         try:
@@ -81,7 +101,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         # если файла не существует выполняется этот код
         except(FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии смен в текущем месяце
-            QtWidgets.QMessageBox.information(self.centralWidget, 'Нет смен в текущем месяце.',
+            QtWidgets.QMessageBox.information(splash, 'Нет смен в текущем месяце.',
                                               'Создайте смены или загрузите другой месяц.',
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         # если файл существует то заполняем таблицу смен
@@ -116,13 +136,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_saveData.triggered.connect(self.save_shifts)  # сохраняем данные по сменам
         self.action_removeShift.triggered.connect(self.removeShift_tableShifts)  # удаляем смену
 
-    def load_data(self, sp):
-        for i in range(1, 11):  # Имитируем процесс
-            time.sleep(2)  # Что-то загружаем
-            sp.showMessage("Загрузка данных... {0}%".format(i * 10), QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom,
-                           QtCore.Qt.white)
-            QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
-
     # метод добавляет новый тариф в comboBox
     def add_new_tariff(self):
         self.comboBox_setting.blockSignals(True)
@@ -154,14 +167,22 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         key_list = []
         date_list = []
         name_tariff = self.comboBox_setting.currentText()
+        settingDateDict = {}
         print(name_tariff)
         ind = QtCore.QModelIndex()
         for i in range(0, self.table_settingTariffsModel.rowCount(ind)):
-            key_list.append(str(self.table_settingTariffsModel.index(i, 0).data()))
-            date_list.append(Decimal(self.table_settingTariffsModel.index(i, 1).data()) / Decimal(100))
-        settingDateDict = dict(zip(key_list, date_list))
-        print(settingDateDict.values())
-        self.settingTariffDict.update({name_tariff: settingDateDict})
+            if '/' in self.table_settingTariffsModel.index(i, 1).data():
+                percent_list = str(self.table_settingTariffsModel.index(i, 1).data()).split(sep='/')
+                percent_list[0] = Decimal(percent_list[0]) / Decimal(100)
+                percent_list[1] = Decimal(percent_list[1]) / Decimal(100)
+                settingDateDict[self.table_settingTariffsModel.index(i, 0).data()] = percent_list
+            else:
+                date_list.append(Decimal(self.table_settingTariffsModel.index(i, 1).data()) / Decimal(100))
+                key_list.append(str(self.table_settingTariffsModel.index(i, 0).data()))
+        settingDateDict1 = dict(zip(key_list, date_list))
+        settingDateDict1.update(settingDateDict)
+        print(settingDateDict1.values())
+        self.settingTariffDict.update({name_tariff: settingDateDict1})
         self.comboBox_setting.blockSignals(False)
         print(self.settingTariffDict)
         return self.settingTariffDict
@@ -282,7 +303,7 @@ if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    splash = QtWidgets.QSplashScreen(QtGui.QPixmap("IMG1.jpg"))
+    splash = QtWidgets.QSplashScreen(QtGui.QPixmap("data/yandex_taxi.png"))
     splash.showMessage("Загрузка данных... 0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.white)
     splash.show()  # Отображаем заставку
     QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
@@ -291,7 +312,7 @@ if __name__ == "__main__":
     window.move(desktop.availableGeometry().center() - window.rect().center())
     ico = QtGui.QIcon('data/taxi_icon_72.png')
     window.setWindowIcon(ico)
-    window.load_data(splash)  # Загружаем данные
+    load_data(splash)  # Загружаем данные
     window.show()  # Отображаем окно
     splash.finish(window)  # Скрываем заставку
     sys.exit(app.exec_())  # Запускаем цикл обработки событий
