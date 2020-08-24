@@ -1,6 +1,7 @@
 import pickle
 import time
 from decimal import Decimal
+from typing import List, Any
 
 from PyQt5 import QtCore, QtWidgets, QtGui
 import my_form
@@ -71,26 +72,28 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             self.comboBox_setting.setCurrentIndex(self.current_index)  # настойка ранее выбраного тарифа
             print(self.current_index)
             tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]  # выбор соответствующих данных
+
             # по выбраному тарифу заполняется таблица настроек тарифов
             tariff_keys = list(tariff_dict.keys())  # список для ключей
-            tariff_list = list(tariff_dict.values())  # список для настроек тарифов
-            for i in range(len(tariff_dict)):  # цикл для заполнения таблицы
-                if type(tariff_list[i]) == list:
+            tariff_list: List[Any] = list(tariff_dict.values())  # список для настроек тарифов
+            for row in range(len(tariff_dict)):  # цикл для заполнения таблицы
+                if type(tariff_list[row]) == list:
                     percent_list = ''
-                    for j in range(len(tariff_list[i])):
-                        percent = str(tariff_list[i][j] * 100)
+                    percent_list_final = ''
+                    for j in range(len(tariff_list[row])):
+                        percent = str(tariff_list[row][j] * 100)
                         percent_list += percent + ' / '
-                        percent_list_final = percent_list[:-3]
-                    print(percent_list_final)
-                    item_l0 = QtGui.QStandardItem(str(tariff_keys[i]))
+                        percent_list_final = percent_list[:-3].replace('.', ',')
+                    item_l0 = QtGui.QStandardItem(str(tariff_keys[row]))
                     item_l1 = QtGui.QStandardItem(percent_list_final)
-                    self.table_settingTariffsModel.setItem(i, 0, item_l0)
-                    self.table_settingTariffsModel.setItem(i, 1, item_l1)
+                    self.table_settingTariffsModel.setItem(row, 0, item_l0)
+                    self.table_settingTariffsModel.setItem(row, 1, item_l1)
                 else:
-                    item_0 = QtGui.QStandardItem(str(tariff_keys[i]))  # модель для заполнения первой колонки
-                    item_1 = QtGui.QStandardItem(str(tariff_list[i] * 100))  # модель для заполнения второй колонки
-                    self.table_settingTariffsModel.setItem(i, 0, item_0)  # заполняем первую колонки
-                    self.table_settingTariffsModel.setItem(i, 1, item_1)  # заполняем вторую колонку
+                    item_0 = QtGui.QStandardItem(str(tariff_keys[row]))  # модель для заполнения первой колонки
+                    item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100).replace('.', ','))  # модель для заполнения
+                    # второй колонки
+                    self.table_settingTariffsModel.setItem(row, 0, item_0)  # заполняем первую колонки
+                    self.table_settingTariffsModel.setItem(row, 1, item_1)  # заполняем вторую колонку
 
         # загружаем данные смен из сохранённого файла dateMont
         try:
@@ -113,12 +116,12 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             for key in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
                 date_list.append(self.dateMonth[key])  # заполняем список с данными по сменам
             for j in range(self.StIM_shiftsTable.columnCount(index)):  # цикл по колонкам
-                for i in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
-                    self.StIM_shiftsTable.setItem(i, j, QtGui.QStandardItem(date_list[j][i]))  # заполнение таблицы
+                for row in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
+                    self.StIM_shiftsTable.setItem(row, j, QtGui.QStandardItem(date_list[j][row]))  # заполнение таблицы
                     # данными по сменам
             f_salary = 0
-            for i in range(len(date_list)):
-                f_salary += Decimal(date_list[i][8])
+            for row in range(len(date_list)):
+                f_salary += Decimal(date_list[row][8])
             self.label_salary.setText(str(f_salary) + ' руб')
         print(self.tariffsList)
 
@@ -173,11 +176,12 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         for i in range(0, self.table_settingTariffsModel.rowCount(ind)):
             if '/' in self.table_settingTariffsModel.index(i, 1).data():
                 percent_list = str(self.table_settingTariffsModel.index(i, 1).data()).split(sep='/')
-                percent_list[0] = Decimal(percent_list[0]) / Decimal(100)
-                percent_list[1] = Decimal(percent_list[1]) / Decimal(100)
+                percent_list[0] = Decimal(percent_list[0].replace(',', '.')) / Decimal(100)
+                percent_list[1] = Decimal(percent_list[1].replace(',', '.')) / Decimal(100)
                 settingDateDict[self.table_settingTariffsModel.index(i, 0).data()] = percent_list
             else:
-                date_list.append(Decimal(self.table_settingTariffsModel.index(i, 1).data()) / Decimal(100))
+                date_list.append(Decimal(str(self.table_settingTariffsModel.index(i, 1).data()).replace(',', '.')) /
+                                 Decimal(100))
                 key_list.append(str(self.table_settingTariffsModel.index(i, 0).data()))
         settingDateDict1 = dict(zip(key_list, date_list))
         settingDateDict1.update(settingDateDict)
@@ -209,10 +213,22 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             tariff_list = list(tariff_dict.values())
             #
             for row in range(len(tariff_dict)):
-                item_0 = QtGui.QStandardItem(str(tariff_keys[row]))
-                item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))
-                self.table_settingTariffsModel.setItem(row, 0, item_0)
-                self.table_settingTariffsModel.setItem(row, 1, item_1)
+                if type(tariff_list[row]) == list:
+                    percent_list = ''
+                    percent_list_final = ''
+                    for j in range(len(tariff_list[row])):
+                        percent = str(tariff_list[row][j] * 100)
+                        percent_list += percent + ' / '
+                        percent_list_final = percent_list[:-3].replace('.', ',')
+                    item_l0 = QtGui.QStandardItem(str(tariff_keys[row]))
+                    item_l1 = QtGui.QStandardItem(percent_list_final)
+                    self.table_settingTariffsModel.setItem(row, 0, item_l0)
+                    self.table_settingTariffsModel.setItem(row, 1, item_l1)
+                else:
+                    item_0 = QtGui.QStandardItem(str(tariff_keys[row]))
+                    item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100).replace('.', ','))
+                    self.table_settingTariffsModel.setItem(row, 0, item_0)
+                    self.table_settingTariffsModel.setItem(row, 1, item_1)
 
             ind = self.tableView_shifts.currentIndex()
             sel = self.tableView_shifts.selectionModel()
@@ -260,16 +276,21 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                     coefficient = reverse_dict[key]
                     break
             print(coefficient)
+            print(key)
         else:
             QtWidgets.QMessageBox.information(window, "Предупреждение",
                                               "Пожалуйста выберите смену для расчёта",
                                               buttons=QtWidgets.QMessageBox.Close,
                                               defaultButton=QtWidgets.QMessageBox.Close)
-        my_percent = Decimal(fullSalary) * Decimal(coefficient)
-        self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
-        my_salary = my_percent - Decimal(
-            self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) - Decimal(
-            self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
+        if type(coefficient) == list:
+            over_plan = fullSalary - Decimal(key)
+            my_percent = Decimal(key) * coefficient[0] + over_plan * coefficient[1]
+            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
+        else:
+            my_percent = Decimal(fullSalary) * Decimal(coefficient)
+            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
+        my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) - \
+                    Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
         self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary)))
 
         ind_sum = QtCore.QModelIndex()
