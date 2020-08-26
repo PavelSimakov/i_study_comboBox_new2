@@ -94,7 +94,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>29</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="font">
@@ -180,7 +180,7 @@
    <property name="minimumSize">
     <size>
      <width>300</width>
-     <height>453</height>
+     <height>454</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -503,6 +503,9 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -536,9 +539,9 @@
              <widget class="QLabel" name="label_payOut">
               <property name="geometry">
                <rect>
-                <x>0</x>
+                <x>10</x>
                 <y>0</y>
-                <width>217</width>
+                <width>201</width>
                 <height>30</height>
                </rect>
               </property>
@@ -547,6 +550,9 @@
                 <width>0</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
               </property>
               <property name="text">
                <string/>
@@ -581,9 +587,9 @@
              <widget class="QLabel" name="label_debt">
               <property name="geometry">
                <rect>
-                <x>0</x>
+                <x>10</x>
                 <y>0</y>
-                <width>217</width>
+                <width>201</width>
                 <height>30</height>
                </rect>
               </property>
@@ -593,6 +599,9 @@
                 <height>30</height>
                </size>
               </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -600,29 +609,6 @@
                <set>Qt::AlignCenter</set>
               </property>
              </widget>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Выплата</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBox">
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::NoButtons</enum>
-             </property>
-             <property name="suffix">
-              <string>руб</string>
-             </property>
-             <property name="maximum">
-              <double>9999.989999999999782</double>
-             </property>
             </widget>
            </item>
            <item>

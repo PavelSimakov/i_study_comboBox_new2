@@ -113,8 +113,9 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             self.StIM_shiftsTable.setHorizontalHeaderLabels(shiftsNameList)  # список горизонтальных заголовков
             index = QtCore.QModelIndex()  # просто индекс
             date_list = []  # список для временного хранения данных по сменам
-            for key in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
-                date_list.append(self.dateMonth[key])  # заполняем список с данными по сменам
+            key_dateMonth: str
+            for key_dateMonth in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
+                date_list.append(self.dateMonth[key_dateMonth])  # заполняем список с данными по сменам
             for j in range(self.StIM_shiftsTable.columnCount(index)):  # цикл по колонкам
                 for row in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
                     self.StIM_shiftsTable.setItem(row, j, QtGui.QStandardItem(date_list[j][row]))  # заполнение таблицы
@@ -260,6 +261,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     def calculatedShift(self):
         fullSalary = Decimal('0')
         coefficient = '0'
+        key_reverse_dict = ''
         ind = self.tableView_shifts.currentIndex()
         sel = self.tableView_shifts.selectionModel()
 
@@ -271,20 +273,18 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary)))
             print(fullSalary)
             reverse_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
-            for key in sorted(reverse_dict, reverse=True):
-                if Decimal(fullSalary) >= Decimal(key):
-                    coefficient = reverse_dict[key]
+            for key_reverse_dict in sorted(reverse_dict, reverse=True):
+                if Decimal(fullSalary) >= Decimal(key_reverse_dict):
+                    coefficient = reverse_dict[key_reverse_dict]
                     break
-            print(coefficient)
-            print(key)
         else:
             QtWidgets.QMessageBox.information(window, "Предупреждение",
                                               "Пожалуйста выберите смену для расчёта",
                                               buttons=QtWidgets.QMessageBox.Close,
                                               defaultButton=QtWidgets.QMessageBox.Close)
         if type(coefficient) == list:
-            over_plan = fullSalary - Decimal(key)
-            my_percent = Decimal(key) * coefficient[0] + over_plan * coefficient[1]
+            over_plan = fullSalary - Decimal(key_reverse_dict)
+            my_percent = Decimal(key_reverse_dict) * coefficient[0] + over_plan * coefficient[1]
             self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
         else:
             my_percent = Decimal(fullSalary) * Decimal(coefficient)
@@ -292,9 +292,11 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) - \
                     Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
         self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary)))
+        self.StIM_shiftsTable.setItem(6, ind.column(), QtGui.QStandardItem(self.comboBox_setting.currentText()))
 
         ind_sum = QtCore.QModelIndex()
         f_salary = 0
+
         for i in range(self.StIM_shiftsTable.columnCount(ind_sum)):
             f_salary += Decimal(self.StIM_shiftsTable.index(8, i).data(QtCore.Qt.EditRole))
         self.label_salary.setText(str(f_salary) + " руб")
