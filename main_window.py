@@ -7,11 +7,12 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 import my_form
 
 
+# метод для заставки
 def load_data(sp):
     for i in range(1, 6):  # Имитируем процесс
-        time.sleep(2)  # Что-то загружаем
+        time.sleep(1)  # Что-то загружаем
         sp.showMessage("Загрузка данных... {0}%".format(i * 20), QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom,
-                       QtCore.Qt.white)
+                       QtCore.Qt.red)  # надпись внизу картинки якобы считает ппроценты загрузки
         QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
 
 
@@ -121,10 +122,14 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                     self.StIM_shiftsTable.setItem(row, j, QtGui.QStandardItem(date_list[j][row]))  # заполнение таблицы
                     # данными по сменам
             f_salary = 0
-            for row in range(len(date_list)):
-                f_salary += Decimal(date_list[row][8])
-            self.label_salary.setText(str(f_salary) + ' руб')
-        print(self.tariffsList)
+            payOut = 0
+            for i in range(len(date_list)):
+                f_salary += Decimal(self.StIM_shiftsTable.index(8, i).data(QtCore.Qt.EditRole))
+                payOut += Decimal(self.StIM_shiftsTable.index(9, i).data(QtCore.Qt.EditRole))
+            dept = Decimal(f_salary) - Decimal(payOut)
+            self.label_salary.setText(str(f_salary).replace('.', ',') + " руб")
+            self.label_payOut.setText(str(payOut).replace('.', ',') + ' руб')
+            self.label_debt.setText(str(dept).replace('.', ',') + ' руб')
 
         # действие при выборе тарифа
         self.comboBox_setting.activated[str].connect(self.comboBox_activated)  # смена тарифа в comboBox
@@ -139,6 +144,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_calculationShift.triggered.connect(self.calculatedShift)  # расчитываем смену
         self.action_saveData.triggered.connect(self.save_shifts)  # сохраняем данные по сменам
         self.action_removeShift.triggered.connect(self.removeShift_tableShifts)  # удаляем смену
+        self.pushButton_calcDept.clicked.connect(self.calculate_dept)
 
     # метод добавляет новый тариф в comboBox
     def add_new_tariff(self):
@@ -260,7 +266,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     # метод расчитывает смену
     def calculatedShift(self):
         fullSalary = Decimal('0')
-        coefficient = '0'
+        coefficient = 0
         key_reverse_dict = ''
         ind = self.tableView_shifts.currentIndex()
         sel = self.tableView_shifts.selectionModel()
@@ -269,9 +275,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             fullSalary = sum([Decimal(self.StIM_shiftsTable.index(0, ind.column()).data(QtCore.Qt.EditRole)),
                               Decimal(self.StIM_shiftsTable.index(1, ind.column()).data(QtCore.Qt.EditRole)),
                               Decimal(self.StIM_shiftsTable.index(2, ind.column()).data(QtCore.Qt.EditRole))])
-
-            self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary)))
             print(fullSalary)
+            self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary).replace('.', ',')))
             reverse_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
             for key_reverse_dict in sorted(reverse_dict, reverse=True):
                 if Decimal(fullSalary) >= Decimal(key_reverse_dict):
@@ -285,21 +290,27 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         if type(coefficient) == list:
             over_plan = fullSalary - Decimal(key_reverse_dict)
             my_percent = Decimal(key_reverse_dict) * coefficient[0] + over_plan * coefficient[1]
-            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
+            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent).replace('.', ',')))
         else:
             my_percent = Decimal(fullSalary) * Decimal(coefficient)
-            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
+            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent).replace('.', ',')))
         my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) - \
                     Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
-        self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary)))
+        self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary).replace('.', ',')))
         self.StIM_shiftsTable.setItem(6, ind.column(), QtGui.QStandardItem(self.comboBox_setting.currentText()))
 
+    def calculate_dept(self):
         ind_sum = QtCore.QModelIndex()
-        f_salary = 0
+        f_salary = Decimal('0')
+        payOut = Decimal('0')
 
         for i in range(self.StIM_shiftsTable.columnCount(ind_sum)):
             f_salary += Decimal(self.StIM_shiftsTable.index(8, i).data(QtCore.Qt.EditRole))
-        self.label_salary.setText(str(f_salary) + " руб")
+            payOut += Decimal(self.StIM_shiftsTable.index(9, i).data(QtCore.Qt.EditRole))
+        dept = f_salary - payOut
+        self.label_salary.setText(str(f_salary).replace('.', ',') + " руб")
+        self.label_payOut.setText(str(payOut).replace('.', ',') + ' руб')
+        self.label_debt.setText(str(dept).replace('.', ',') + ' руб')
 
     def save_shifts(self):
         index = QtCore.QModelIndex()
@@ -327,7 +338,14 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     splash = QtWidgets.QSplashScreen(QtGui.QPixmap("data/yandex_taxi.png"))
-    splash.showMessage("Загрузка данных... 0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.white)
+    font = QtGui.QFont()
+    font.setFamily("C059 [UKWN]")
+    font.setPointSize(24)
+    font.setBold(True)
+    font.setItalic(True)
+    font.setWeight(75)
+    splash.setFont(font)
+    splash.showMessage("Загрузка данных... 0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.red)
     splash.show()  # Отображаем заставку
     QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
     window = MyWindow()  # Создаем экземпляр класса
