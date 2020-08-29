@@ -1,5 +1,7 @@
 import pickle
 import time
+import os
+import re
 from decimal import Decimal
 from typing import List, Any
 
@@ -24,6 +26,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.tariffsList = []  # для временного хранения списка тарифов
         self.current_index = None  # для хранения выбранного индекса comboBox
         self.settingTariffDict = {}  # для хранения настроек тарифов
+        self.f_salary_dict = {}
+        self.payOut_dict = {}
 
         # настройка dateEdit
         self.date = QtCore.QDate  # экземпляр QDate
@@ -53,11 +57,11 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # если файлы, с сохранёнными настройками, существуют то они загружаются для дальнейшего использования
         try:
-            f = open('dataSetting/settingTariffDict.txt', 'rb')  # открываем файл с настройками тарифа
+            f = open('save_dates/settingTariffDict.txt', 'rb')  # открываем файл с настройками тарифа
             self.settingTariffDict = pickle.load(f)  # загружаем файл в словарь settingTariffDict
             f.close()  # закрываем файл
             print(self.settingTariffDict)
-            f = open('dataSetting/comboBox_currentIndex.txt', 'rb')  # открываем файл с настройкой
+            f = open('save_dates/comboBox_currentIndex.txt', 'rb')  # открываем файл с настройкой
             # выбранного тарифа
             self.current_index = pickle.load(f)  # загружаем файл в current_index
             f.close()  # закрываем файл
@@ -84,21 +88,21 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                     for j in range(len(tariff_list[row])):
                         percent = str(tariff_list[row][j] * 100)
                         percent_list += percent + ' / '
-                        percent_list_final = percent_list[:-3].replace('.', ',')
+                        percent_list_final = percent_list[:-3]
                     item_l0 = QtGui.QStandardItem(str(tariff_keys[row]))
                     item_l1 = QtGui.QStandardItem(percent_list_final)
                     self.table_settingTariffsModel.setItem(row, 0, item_l0)
                     self.table_settingTariffsModel.setItem(row, 1, item_l1)
                 else:
                     item_0 = QtGui.QStandardItem(str(tariff_keys[row]))  # модель для заполнения первой колонки
-                    item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100).replace('.', ','))  # модель для заполнения
+                    item_1 = QtGui.QStandardItem(str(tariff_list[row] * 100))  # модель для заполнения
                     # второй колонки
                     self.table_settingTariffsModel.setItem(row, 0, item_0)  # заполняем первую колонки
                     self.table_settingTariffsModel.setItem(row, 1, item_1)  # заполняем вторую колонку
 
         # загружаем данные смен из сохранённого файла dateMont
         try:
-            f = open('dataShifts/' + self.dateEdit_shifts.text()[3:] + '.txt', 'rb')  # открываем файл сосменами
+            f = open('save_dates/' + self.dateEdit_shifts.text()[3:] + '.txt', 'rb')  # открываем файл сосменами
             # текущего месяца
             self.dateMonth = pickle.load(f)  # загружаем файл в dateMonth
             f.close()  # закрываем файл
@@ -110,30 +114,59 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                                               defaultButton=QtWidgets.QMessageBox.Ok)
         # если файл существует то заполняем таблицу смен
         else:
-            shiftsNameList = list(self.dateMonth.keys())
+            shiftsNameList = list(self.dateMonth.keys())  # список названий смен
             self.StIM_shiftsTable.setHorizontalHeaderLabels(shiftsNameList)  # список горизонтальных заголовков
             index = QtCore.QModelIndex()  # просто индекс
             date_list = []  # список для временного хранения данных по сменам
-            key_dateMonth: str
             for key_dateMonth in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
                 date_list.append(self.dateMonth[key_dateMonth])  # заполняем список с данными по сменам
             for j in range(self.StIM_shiftsTable.columnCount(index)):  # цикл по колонкам
                 for row in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
                     self.StIM_shiftsTable.setItem(row, j, QtGui.QStandardItem(date_list[j][row]))  # заполнение таблицы
                     # данными по сменам
-            f_salary = 0
-            payOut = 0
-            for i in range(len(date_list)):
-                f_salary += Decimal(self.StIM_shiftsTable.index(8, i).data(QtCore.Qt.EditRole))
-                payOut += Decimal(self.StIM_shiftsTable.index(9, i).data(QtCore.Qt.EditRole))
-            dept = Decimal(f_salary) - Decimal(payOut)
-            self.label_salary.setText(str(f_salary).replace('.', ',') + " руб")
-            self.label_payOut.setText(str(payOut).replace('.', ',') + ' руб')
-            self.label_debt.setText(str(dept).replace('.', ',') + ' руб')
+
+        try:
+            f = open('save_dates/f_salary_dict.txt', 'rb')
+            self.f_salary_dict = pickle.load(f)
+            f.close()
+            f = open('save_dates/payOut_dict.txt', 'rb')
+            self.payOut_dict = pickle.load(f)
+            f.close()
+        except(FileNotFoundError, EOFError):
+            # диалоговое окно с информацией о отсутствии смен в текущем месяце
+            QtWidgets.QMessageBox.information(splash, 'Нет сохранённых данных.',
+                                              'При работе программы будут созданны базы данных.',
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
+        else:
+            #
+            salary_list = []
+            payOut_list = []
+            key_dateMonth: str
+            for key_dateMonth in self.dateMonth.keys():
+                salary_list.append(Decimal(self.dateMonth[key_dateMonth][8]))
+                payOut_list.append(Decimal(self.dateMonth[key_dateMonth][9]))
+            f_salary_dict = dict(zip(list(self.dateMonth.keys()), salary_list))
+            self.f_salary_dict.update(f_salary_dict)
+            payOut_dict = dict(zip(list(self.dateMonth.keys()), payOut_list))
+            self.payOut_dict.update(payOut_dict)
+            f_salary = sum(self.f_salary_dict.values())
+            payOut = sum(self.payOut_dict.values())
+            self.label_debt.setText(str(f_salary - payOut))
+            self.label_salary.setText(str(f_salary))
+            self.label_payOut.setText(str(payOut))
+
+            names_files_list = os.listdir('save_dates')
+            name_file = []
+            for i in range(len(names_files_list)):
+                if re.search('\d+', names_files_list[i]) is not None:
+                    name_file.append(names_files_list[i][:-4])
+            name_file.sort()
+            self.comboBox_selectedMont.addItems(name_file)
 
         # действие при выборе тарифа
-        self.comboBox_setting.activated[str].connect(self.comboBox_activated)  # смена тарифа в comboBox
+        self.comboBox_setting.activated[str].connect(self.comboBox_setting_activated)  # смена тарифа в comboBox
         # действия меню
+        self.comboBox_selectedMont.activated[str].connect(self.comboBox_selectedMonth_activated)
         self.action_addTariff.triggered.connect(self.add_new_tariff)  # добавляет тариф
         self.action_removeTariff.triggered.connect(self.remove_tariff)  # удаляет тариф
         self.action_addRow.triggered.connect(self.tableTariff_addRow)  # добавляет строку в таблицу
@@ -142,7 +175,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.action_saveSettings.triggered.connect(self.saveSettings)  # сохранят настройки тарифов и программы
         self.action_addShift.triggered.connect(self.addShift_tableShifts)  # добавляем смену
         self.action_calculationShift.triggered.connect(self.calculatedShift)  # расчитываем смену
-        self.action_saveData.triggered.connect(self.save_shifts)  # сохраняем данные по сменам
+        self.action_saveData.triggered.connect(self.save_dates)  # сохраняем данные по сменам
         self.action_removeShift.triggered.connect(self.removeShift_tableShifts)  # удаляем смену
         self.pushButton_calcDept.clicked.connect(self.calculate_dept)
 
@@ -200,17 +233,17 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
     # метод сохраняет настройки тарифов в файлы
     def saveSettings(self):
-        f = open('dataSetting/settingTariffDict.txt', 'wb')
+        f = open('save_dates/settingTariffDict.txt', 'wb')
         pickle.dump(self.settingTariffDict, f)
         f.close()
         current_index = self.comboBox_setting.currentIndex()
-        f = open('dataSetting/comboBox_currentIndex.txt', 'wb')
+        f = open('save_dates/comboBox_currentIndex.txt', 'wb')
         pickle.dump(current_index, f)
         print(current_index)
         f.close()
 
     # метод активирует выбранный тариф и показывает его настройки
-    def comboBox_activated(self, v):
+    def comboBox_setting_activated(self, v):
 
         if v in self.settingTariffDict:
             #
@@ -243,6 +276,29 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             if sel.isColumnSelected(ind.column(), QtCore.QModelIndex()):
                 self.StIM_shiftsTable.setItem(6, ind.column(), QtGui.QStandardItem(self.comboBox_setting.currentText()))
 
+    def comboBox_selectedMonth_activated(self, v):
+        try:
+            f = open('save_dates/' + v + '.txt', 'rb')
+            self.dateMonth = pickle.load(f)
+            f.close()
+        except(FileNotFoundError, EOFError):
+            # диалоговое окно с информацией о отсутствии смен в текущем месяце
+            QtWidgets.QMessageBox.information(splash, 'Нет смен в выбраном месяце.',
+                                              'Попробуйте выбрать другой месяц.',
+                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            # если файл существует то заполняем таблицу смен
+        else:
+            shiftsNameList = list(self.dateMonth.keys())  # список названий смен
+            self.StIM_shiftsTable.setHorizontalHeaderLabels(shiftsNameList)  # список горизонтальных заголовков
+            index = QtCore.QModelIndex()  # просто индекс
+            date_list = []  # список для временного хранения данных по сменам
+            for key_dateMonth in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
+                date_list.append(self.dateMonth[key_dateMonth])  # заполняем список с данными по сменам
+            for j in range(self.StIM_shiftsTable.columnCount(index)):  # цикл по колонкам
+                for row in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
+                    self.StIM_shiftsTable.setItem(row, j, QtGui.QStandardItem(date_list[j][row]))  # заполнение таблицы
+                    # данными по сменам
+
     # метод добавлят смену в таблицу
     def addShift_tableShifts(self):
         list_row = []
@@ -258,9 +314,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     def removeShift_tableShifts(self):
         index = self.tableView_shifts.currentIndex()
         if index.isValid():
-            f_salary = Decimal(self.label_salary.text()[:-4].replace(',', '.')) - Decimal(
-                self.StIM_shiftsTable.index(8, index.column()).data(QtCore.Qt.EditRole))
-            self.label_salary.setText(str(f_salary) + ' руб')
             self.StIM_shiftsTable.removeColumn(index.column())
 
     # метод расчитывает смену
@@ -276,7 +329,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                               Decimal(self.StIM_shiftsTable.index(1, ind.column()).data(QtCore.Qt.EditRole)),
                               Decimal(self.StIM_shiftsTable.index(2, ind.column()).data(QtCore.Qt.EditRole))])
             print(fullSalary)
-            self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary).replace('.', ',')))
+            self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary)))
             reverse_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
             for key_reverse_dict in sorted(reverse_dict, reverse=True):
                 if Decimal(fullSalary) >= Decimal(key_reverse_dict):
@@ -290,29 +343,42 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         if type(coefficient) == list:
             over_plan = fullSalary - Decimal(key_reverse_dict)
             my_percent = Decimal(key_reverse_dict) * coefficient[0] + over_plan * coefficient[1]
-            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent).replace('.', ',')))
+            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
         else:
             my_percent = Decimal(fullSalary) * Decimal(coefficient)
-            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent).replace('.', ',')))
+            self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
         my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) - \
                     Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
-        self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary).replace('.', ',')))
+        self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary)))
         self.StIM_shiftsTable.setItem(6, ind.column(), QtGui.QStandardItem(self.comboBox_setting.currentText()))
+
+        self.f_salary_dict[self.StIM_shiftsTable.horizontalHeaderItem(ind.column()).data(role=0)] = my_salary
+        self.payOut_dict[self.StIM_shiftsTable.horizontalHeaderItem(ind.column()).data(role=0)] = \
+            Decimal(self.StIM_shiftsTable.item(9, ind.column()).data(role=0))
+        f_salary = sum(self.f_salary_dict.values())
+        payOut = sum(self.payOut_dict.values())
+        self.label_debt.setText(str(f_salary - payOut))
+        self.label_salary.setText(str(f_salary))
+        self.label_payOut.setText(str(payOut))
 
     def calculate_dept(self):
         ind_sum = QtCore.QModelIndex()
-        f_salary = Decimal('0')
-        payOut = Decimal('0')
-
+        shift_name_list = []
+        f_salary_list = []
+        payOut_list = []
         for i in range(self.StIM_shiftsTable.columnCount(ind_sum)):
-            f_salary += Decimal(self.StIM_shiftsTable.index(8, i).data(QtCore.Qt.EditRole))
-            payOut += Decimal(self.StIM_shiftsTable.index(9, i).data(QtCore.Qt.EditRole))
-        dept = f_salary - payOut
-        self.label_salary.setText(str(f_salary).replace('.', ',') + " руб")
-        self.label_payOut.setText(str(payOut).replace('.', ',') + ' руб')
-        self.label_debt.setText(str(dept).replace('.', ',') + ' руб')
+            shift_name_list.append(self.StIM_shiftsTable.horizontalHeaderItem(i).data(role=0))
+            f_salary_list.append(Decimal(self.StIM_shiftsTable.index(8, i).data(role=0)))
+            payOut_list.append(Decimal(self.StIM_shiftsTable.index(9, i).data(role=0)))
+        self.f_salary_dict.update(dict(zip(shift_name_list, f_salary_list)))
+        self.payOut_dict.update(dict(zip(shift_name_list, payOut_list)))
+        f_salary = sum(list(self.f_salary_dict.values()))
+        pay_Out = sum(list(self.payOut_dict.values()))
+        self.label_debt.setText(str(f_salary - pay_Out))
+        self.label_salary.setText(str(f_salary))
+        self.label_payOut.setText(str(pay_Out))
 
-    def save_shifts(self):
+    def save_dates(self):
         index = QtCore.QModelIndex()
         date_shifts = []
         shift_name_list = []
@@ -328,8 +394,14 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.dateMonth = dict(zip(shift_name_list, date_shifts))
         print(self.dateMonth)
 
-        f = open('dataShifts/' + self.dateEdit_shifts.text()[3:] + '.txt', 'wb')
+        f = open('save_dates/' + self.dateEdit_shifts.text()[3:] + '.txt', 'wb')
         pickle.dump(self.dateMonth, f)
+        f.close()
+        f = open('save_dates/f_salary_dict.txt', 'wb')
+        pickle.dump(self.f_salary_dict, f)
+        f.close()
+        f = open('save_dates/payOut_dict.txt', 'wb')
+        pickle.dump(self.payOut_dict, f)
         f.close()
 
 
