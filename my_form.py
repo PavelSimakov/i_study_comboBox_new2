@@ -18,7 +18,7 @@ class Ui_MainWindow(object):
         MainWindow.setAutoFillBackground(True)
         MainWindow.resize(1107, 513)
         MainWindow.setMinimumSize(QtCore.QSize(800, 300))
-        MainWindow.setMaximumSize(QtCore.QSize(1200, 800))
+        MainWindow.setMaximumSize(QtCore.QSize(1400, 800))
         font = QtGui.QFont()
         font.setFamily("C059 [UKWN]")
         font.setPointSize(12)
@@ -217,6 +217,9 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.tableViewSetting.setFont(font)
         self.tableViewSetting.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        self.tableViewSetting.setStyleSheet("QHeaderView {\n"
+"    min-width: 25px;\n"
+"}")
         self.tableViewSetting.setInputMethodHints(QtCore.Qt.ImhDigitsOnly)
         self.tableViewSetting.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.tableViewSetting.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed | QtWidgets.QAbstractItemView.CurrentChanged | QtWidgets.QAbstractItemView.DoubleClicked | QtWidgets.QAbstractItemView.EditKeyPressed)

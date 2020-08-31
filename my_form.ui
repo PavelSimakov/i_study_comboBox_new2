@@ -443,6 +443,11 @@
             <property name="contextMenuPolicy">
              <enum>Qt::NoContextMenu</enum>
             </property>
+            <property name="styleSheet">
+             <string notr="true">QHeaderView {
+    min-width: 25px;
+}</string>
+            </property>
             <property name="inputMethodHints">
              <set>Qt::ImhDigitsOnly</set>
             </property>

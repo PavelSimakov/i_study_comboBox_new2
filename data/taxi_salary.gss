@@ -9,7 +9,7 @@ QFrame {
     background-color: #B2FFC0;
     selection-background-color: #AABF86;
     font: bold italic 14px;
-    border: 2px solid green;
+    border: 2px solid #87B8BF;
     border-radius: 10px;
 }
 
@@ -65,9 +65,6 @@ QHeaderView::section {
     background-color: #E3FFB2;
 }
 
-QTableView#tableViewSetting QHeaderView::section{
-    min-width: 30px;
-}
 
 QDockWidget {
     background-color: #C7FFD1;
@@ -83,13 +80,13 @@ QTabBar::tab:selected {
 
 QScrollBar:horizontal {
     border: 2px solid #D9FF99;
-    background: #7BA632;
+    background: #87B8BF;
     height: 15px;
     margin: 0px 30px 0 30px;
 }
 
 QScrollBar::add-line:horizontal {
-    background: #D9FF99;
+    background: #87B8BF;
     width: 16px;
     subcontrol-position: right;
     subcontrol-origin: margin;
@@ -97,7 +94,7 @@ QScrollBar::add-line:horizontal {
 }
 
 QScrollBar::sub-line:horizontal {
-    background: #D9FF99;
+    background: #87B8BF;
     width: 16px;
     subcontrol-position: left;
     subcontrol-origin: margin;
