@@ -1,0 +1,117 @@
+
+QMainWindow {
+    background: #C7FFD1;
+    width: 10px; /* when vertical */
+    height: 10px; /* when horizontal */
+}
+
+QFrame {
+    background-color: #B2FFC0;
+    selection-background-color: #AABF86;
+    font: bold italic 14px;
+    border: 2px solid green;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: #C7FFD1;
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: 2px solid green;
+    font: bold italic 14px;
+    max-width: 5px;
+    padding: 4px;
+}
+
+QPushButton:hover {
+    background-color: #AABF86;
+}
+
+QPushButton:pressed {
+    background-color: #D9FF99;
+    border-style: inset;
+}
+
+QLabel {
+    background-color: #C7FFD1;
+    font: bold italic 14px;
+}
+
+QDateEdit {
+    background-color: #C7FFD1;
+    font: bold italic 14px;
+    border-width: 2px;
+    border-radius: 1px;
+    border-color: 2px solid green;
+}
+
+QComboBox {
+    background-color: #C7FFD1;
+    selection-background-color: #AABF86;
+    font: bold italic 14px;
+}
+
+QTableCornerButton::section {
+ background: #B2FFC0;
+ border: 1px solid green;
+}
+
+QHeaderView {
+    background-color: #E3FFB2;
+}
+
+QHeaderView::section {
+    background-color: #E3FFB2;
+}
+
+QTableView#tableViewSetting QHeaderView::section{
+    min-width: 30px;
+}
+
+QDockWidget {
+    background-color: #C7FFD1;
+}
+
+QTabBar::tab {
+ background: #D9FF99;
+}
+
+QTabBar::tab:selected {
+    background: #AABF86;
+}
+
+QScrollBar:horizontal {
+    border: 2px solid #D9FF99;
+    background: #7BA632;
+    height: 15px;
+    margin: 0px 30px 0 30px;
+}
+
+QScrollBar::add-line:horizontal {
+    background: #D9FF99;
+    width: 16px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+    border: 2px solid #32A646;
+}
+
+QScrollBar::sub-line:horizontal {
+    background: #D9FF99;
+    width: 16px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+    border: 2px solid #32A646;
+}
+
+QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+    width: 5px;
+    height: 5px;
+    background: #7BA632;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: #E3FFB2;
+}
+
+

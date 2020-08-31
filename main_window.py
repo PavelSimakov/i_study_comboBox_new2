@@ -47,7 +47,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # подготовка таблицы для настройки тарифов
         self.table_settingTariffsModel = QtGui.QStandardItemModel()  # модель для талицы настроек тарифов
-        self.tableView_setting.setModel(self.table_settingTariffsModel)  # подключаем модель к таблице
+        self.tableViewSetting.setModel(self.table_settingTariffsModel)  # подключаем модель к таблице
         self.tableHeaderList = ['Накат', 'Проц.']  # список названий колонок
         self.table_settingTariffsModel.setHorizontalHeaderLabels(self.tableHeaderList)  # подключаем названия колонок
         # к таблице
@@ -63,7 +63,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             f = open('save_dates/settingTariffDict.txt', 'rb')  # открываем файл с настройками тарифа
             self.settingTariffDict = pickle.load(f)  # загружаем файл в словарь settingTariffDict
             f.close()  # закрываем файл
-            print(self.settingTariffDict)
             f = open('save_dates/comboBox_currentIndex.txt', 'rb')  # открываем файл с настройкой
             # выбранного тарифа
             self.current_index = pickle.load(f)  # загружаем файл в current_index
@@ -78,7 +77,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         else:
             self.comboBox_setting.addItems(self.settingTariffDict.keys())  # заполнение comboBox названиями тарифов
             self.comboBox_setting.setCurrentIndex(self.current_index)  # настойка ранее выбраного тарифа
-            print(self.current_index)
             tariff_dict = self.settingTariffDict[self.comboBox_setting.currentText()]  # выбор соответствующих данных
 
             # по выбраному тарифу заполняется таблица настроек тарифов
@@ -204,7 +202,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
     # метод удаляет выбранную строку из таблицы настроек тарифов
     def tableTariff_removeRow(self):
-        ind_remove = self.tableView_setting.currentIndex()
+        ind_remove = self.tableViewSetting.currentIndex()
         if ind_remove.isValid():
             self.table_settingTariffsModel.removeRow(ind_remove.row())
 
@@ -214,7 +212,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         date_list = []
         name_tariff = self.comboBox_setting.currentText()
         settingDateDict = {}
-        print(name_tariff)
         ind = QtCore.QModelIndex()
         for i in range(0, self.table_settingTariffsModel.rowCount(ind)):
             if '/' in self.table_settingTariffsModel.index(i, 1).data():
@@ -228,10 +225,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                 key_list.append(str(self.table_settingTariffsModel.index(i, 0).data()))
         settingDateDict1 = dict(zip(key_list, date_list))
         settingDateDict1.update(settingDateDict)
-        print(settingDateDict1.values())
         self.settingTariffDict.update({name_tariff: settingDateDict1})
         self.comboBox_setting.blockSignals(False)
-        print(self.settingTariffDict)
         return self.settingTariffDict
 
     # метод сохраняет настройки тарифов в файлы
@@ -242,7 +237,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         current_index = self.comboBox_setting.currentIndex()
         f = open('save_dates/comboBox_currentIndex.txt', 'wb')
         pickle.dump(current_index, f)
-        print(current_index)
         f.close()
 
     # метод активирует выбранный тариф и показывает его настройки
@@ -331,7 +325,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             fullSalary = sum([Decimal(self.StIM_shiftsTable.index(0, ind.column()).data(QtCore.Qt.EditRole)),
                               Decimal(self.StIM_shiftsTable.index(1, ind.column()).data(QtCore.Qt.EditRole)),
                               Decimal(self.StIM_shiftsTable.index(2, ind.column()).data(QtCore.Qt.EditRole))])
-            print(fullSalary)
             self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary)))
             reverse_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
             for key_reverse_dict in sorted(reverse_dict, reverse=True):
@@ -395,7 +388,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                 date_shift.append(self.StIM_shiftsTable.index(i, j).data())
             date_shifts.append(date_shift)
         self.dateMonth = dict(zip(shift_name_list, date_shifts))
-        print(self.dateMonth)
 
         f = open('save_dates/' + self.dateEdit_shifts.text()[3:] + '.txt', 'wb')
         pickle.dump(self.dateMonth, f)

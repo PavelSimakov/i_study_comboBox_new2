@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>553</height>
+    <width>1107</width>
+    <height>513</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -93,8 +87,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>29</height>
+     <width>1107</width>
+     <height>25</height>
     </rect>
    </property>
    <property name="font">
@@ -215,10 +209,22 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_setting">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-         <horstretch>2</horstretch>
-         <verstretch>1</verstretch>
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>400</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>300</width>
+         <height>400</height>
+        </size>
        </property>
        <property name="tabPosition">
         <enum>QTabWidget::West</enum>
@@ -253,8 +259,8 @@
           <rect>
            <x>10</x>
            <y>13</y>
-           <width>220</width>
-           <height>391</height>
+           <width>251</width>
+           <height>371</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
@@ -262,7 +268,7 @@
            <number>10</number>
           </property>
           <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
+           <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <property name="leftMargin">
            <number>10</number>
@@ -286,7 +292,7 @@
           <item>
            <widget class="QDateEdit" name="dateEdit_shifts">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -344,15 +350,21 @@
           <item>
            <widget class="QComboBox" name="comboBox_setting">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
               <width>150</width>
-              <height>16777215</height>
+              <height>30</height>
              </size>
             </property>
             <property name="font">
@@ -402,7 +414,7 @@
           <item>
            <widget class="QTableView" name="tableView_setting">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -410,13 +422,13 @@
             <property name="minimumSize">
              <size>
               <width>100</width>
-              <height>200</height>
+              <height>180</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>200</width>
-              <height>400</height>
+              <width>220</width>
+              <height>200</height>
              </size>
             </property>
             <property name="font">
@@ -434,11 +446,26 @@
             <property name="inputMethodHints">
              <set>Qt::ImhDigitsOnly</set>
             </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+            </property>
+            <property name="showDropIndicator" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="dragDropOverwriteMode">
+             <bool>false</bool>
+            </property>
             <property name="textElideMode">
              <enum>Qt::ElideMiddle</enum>
             </property>
             <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
              <bool>true</bool>
+            </attribute>
+            <attribute name="verticalHeaderMinimumSectionSize">
+             <number>20</number>
             </attribute>
            </widget>
           </item>
@@ -455,8 +482,11 @@
            <property name="spacing">
             <number>10</number>
            </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinimumSize</enum>
+           </property>
            <property name="leftMargin">
-            <number>10</number>
+            <number>20</number>
            </property>
            <property name="topMargin">
             <number>10</number>
@@ -493,7 +523,7 @@
                <rect>
                 <x>10</x>
                 <y>0</y>
-                <width>200</width>
+                <width>150</width>
                 <height>30</height>
                </rect>
               </property>
@@ -503,8 +533,11 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
               <property name="frameShape">
-               <enum>QFrame::Box</enum>
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="frameShadow">
                <enum>QFrame::Plain</enum>
@@ -550,7 +583,7 @@
                <rect>
                 <x>10</x>
                 <y>0</y>
-                <width>201</width>
+                <width>150</width>
                 <height>30</height>
                </rect>
               </property>
@@ -561,7 +594,7 @@
                </size>
               </property>
               <property name="frameShape">
-               <enum>QFrame::Box</enum>
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="frameShadow">
                <enum>QFrame::Plain</enum>
@@ -604,7 +637,7 @@
                <rect>
                 <x>10</x>
                 <y>0</y>
-                <width>201</width>
+                <width>150</width>
                 <height>30</height>
                </rect>
               </property>
@@ -615,7 +648,7 @@
                </size>
               </property>
               <property name="frameShape">
-               <enum>QFrame::Box</enum>
+               <enum>QFrame::NoFrame</enum>
               </property>
               <property name="lineWidth">
                <number>2</number>
@@ -634,6 +667,24 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_calcDept">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
              <property name="text">
               <string>Расчитать</string>
              </property>
@@ -651,6 +702,24 @@
            </item>
            <item>
             <widget class="QComboBox" name="comboBox_selectedMont">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>30</height>
+              </size>
+             </property>
              <property name="maxCount">
               <number>25</number>
              </property>
