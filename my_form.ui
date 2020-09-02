@@ -88,7 +88,7 @@
      <x>0</x>
      <y>0</y>
      <width>1107</width>
-     <height>25</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="font">
@@ -230,7 +230,7 @@
         <enum>QTabWidget::West</enum>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideMiddle</enum>
@@ -724,6 +724,9 @@
                <width>150</width>
                <height>30</height>
               </size>
+             </property>
+             <property name="editable">
+              <bool>true</bool>
              </property>
              <property name="maxCount">
               <number>25</number>

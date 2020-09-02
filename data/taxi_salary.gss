@@ -8,7 +8,7 @@ QMainWindow {
 QFrame {
     background-color: #B2FFC0;
     selection-background-color: #AABF86;
-    font: bold italic 14px;
+    font: bold italic  14px C059;
     border: 2px solid #87B8BF;
     border-radius: 10px;
 }
@@ -35,12 +35,12 @@ QPushButton:pressed {
 
 QLabel {
     background-color: #C7FFD1;
-    font: bold italic 14px;
+    font: bold italic 14px C059;
 }
 
 QDateEdit {
     background-color: #C7FFD1;
-    font: bold italic 14px;
+    font: bold italic 14px C059;
     border-width: 2px;
     border-radius: 1px;
     border-color: 2px solid green;
@@ -49,7 +49,7 @@ QDateEdit {
 QComboBox {
     background-color: #C7FFD1;
     selection-background-color: #AABF86;
-    font: bold italic 14px;
+    font: bold italic 14px C059;
 }
 
 QTableCornerButton::section {
@@ -59,6 +59,7 @@ QTableCornerButton::section {
 
 QHeaderView {
     background-color: #E3FFB2;
+    min-height:25px;
 }
 
 QHeaderView::section {
@@ -72,6 +73,8 @@ QDockWidget {
 
 QTabBar::tab {
  background: #D9FF99;
+ font: bold italic 14px C059;
+ min-height:120px;
 }
 
 QTabBar::tab:selected {

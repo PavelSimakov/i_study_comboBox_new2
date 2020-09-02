@@ -17,7 +17,7 @@ def load_data(sp):
     for i in range(1, 6):  # Имитируем процесс
         time.sleep(1)  # Что-то загружаем
         sp.showMessage("Загрузка данных... {0}%".format(i * 20), QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom,
-                       QtCore.Qt.red)  # надпись внизу картинки якобы считает ппроценты загрузки
+                       QtCore.Qt.yellow)  # надпись внизу картинки якобы считает ппроценты загрузки
         QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
 
 
@@ -285,9 +285,10 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                                               defaultButton=QtWidgets.QMessageBox.Ok)
             # если файл существует то заполняем таблицу смен
         else:
+            index = QtCore.QModelIndex()  # просто индекс
+            self.StIM_shiftsTable.removeColumns(0, self.StIM_shiftsTable.columnCount(index), parent=index)
             shiftsNameList = list(self.dateMonth.keys())  # список названий смен
             self.StIM_shiftsTable.setHorizontalHeaderLabels(shiftsNameList)  # список горизонтальных заголовков
-            index = QtCore.QModelIndex()  # просто индекс
             date_list = []  # список для временного хранения данных по сменам
             for key_dateMonth in self.dateMonth.keys():  # цикл для заполнения списка данных по сменам
                 date_list.append(self.dateMonth[key_dateMonth])  # заполняем список с данными по сменам
@@ -322,9 +323,9 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         sel = self.tableView_shifts.selectionModel()
 
         if sel.isColumnSelected(ind.column(), QtCore.QModelIndex()):
-            fullSalary = sum([Decimal(self.StIM_shiftsTable.index(0, ind.column()).data(QtCore.Qt.EditRole)),
-                              Decimal(self.StIM_shiftsTable.index(1, ind.column()).data(QtCore.Qt.EditRole)),
-                              Decimal(self.StIM_shiftsTable.index(2, ind.column()).data(QtCore.Qt.EditRole))])
+            fullSalary = sum([Decimal(self.StIM_shiftsTable.index(0, ind.column()).data(role=0)),
+                              Decimal(self.StIM_shiftsTable.index(1, ind.column()).data(role=0)),
+                              Decimal(self.StIM_shiftsTable.index(2, ind.column()).data(role=0))])
             self.StIM_shiftsTable.setItem(5, ind.column(), QtGui.QStandardItem(str(fullSalary)))
             reverse_dict = self.settingTariffDict[self.comboBox_setting.currentText()]
             for key_reverse_dict in sorted(reverse_dict, reverse=True):
@@ -343,8 +344,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         else:
             my_percent = Decimal(fullSalary) * Decimal(coefficient)
             self.StIM_shiftsTable.setItem(7, ind.column(), QtGui.QStandardItem(str(my_percent)))
-        my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(QtCore.Qt.EditRole)) - \
-                    Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(QtCore.Qt.EditRole))
+        my_salary = my_percent - Decimal(self.StIM_shiftsTable.index(3, ind.column()).data(role=0)) - \
+                    Decimal(self.StIM_shiftsTable.index(4, ind.column()).data(role=0))
         self.StIM_shiftsTable.setItem(8, ind.column(), QtGui.QStandardItem(str(my_salary)))
         self.StIM_shiftsTable.setItem(6, ind.column(), QtGui.QStandardItem(self.comboBox_setting.currentText()))
 
@@ -378,7 +379,6 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         index = QtCore.QModelIndex()
         date_shifts = []
         shift_name_list = []
-
         for j in range(self.StIM_shiftsTable.columnCount(index)):
             shift_name_list.append(self.StIM_shiftsTable.horizontalHeaderItem(j).text())
 
@@ -399,6 +399,15 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         pickle.dump(self.payOut_dict, f)
         f.close()
 
+        names_files_list = os.listdir('save_dates')
+        name_file = []
+        for i in range(len(names_files_list)):
+            if re.search('\d+', names_files_list[i]) is not None:
+                name_file.append(names_files_list[i][:-4])
+        name_file.sort()
+        self.comboBox_selectedMont.clear()
+        self.comboBox_selectedMont.addItems(name_file)
+
 
 if __name__ == "__main__":
     import sys
@@ -412,7 +421,7 @@ if __name__ == "__main__":
     font.setItalic(True)
     font.setWeight(75)
     splash.setFont(font)
-    splash.showMessage("Загрузка данных... 0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.red)
+    splash.showMessage("Загрузка данных... 0%", QtCore.Qt.AlignHCenter | QtCore.Qt.AlignBottom, QtCore.Qt.yellow)
     splash.show()  # Отображаем заставку
     QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
     window = MyWindow()  # Создаем экземпляр класса

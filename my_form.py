@@ -95,7 +95,8 @@ class Ui_MainWindow(object):
         self.statusBar.setObjectName("statusBar")
         MainWindow.setStatusBar(self.statusBar)
         self.dockWidget_setting = QtWidgets.QDockWidget(MainWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.
+                                           MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.dockWidget_setting.sizePolicy().hasHeightForWidth())
@@ -194,7 +195,8 @@ class Ui_MainWindow(object):
         self.comboBox_setting.setObjectName("comboBox_setting")
         self.verticalLayout.addWidget(self.comboBox_setting)
         self.label_4 = QtWidgets.QLabel(self.layoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                           QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
@@ -217,12 +219,12 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.tableViewSetting.setFont(font)
         self.tableViewSetting.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.tableViewSetting.setStyleSheet("QHeaderView {\n"
-"    min-width: 25px;\n"
-"}")
+        self.tableViewSetting.setStyleSheet("QHeaderView {\nmin-width: 25px;\n}")
         self.tableViewSetting.setInputMethodHints(QtCore.Qt.ImhDigitsOnly)
         self.tableViewSetting.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-        self.tableViewSetting.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed | QtWidgets.QAbstractItemView.CurrentChanged | QtWidgets.QAbstractItemView.DoubleClicked | QtWidgets.QAbstractItemView.EditKeyPressed)
+        self.tableViewSetting.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed | QtWidgets.QAbstractItemView.
+                                              CurrentChanged | QtWidgets.QAbstractItemView.DoubleClicked |
+                                              QtWidgets.QAbstractItemView.EditKeyPressed)
         self.tableViewSetting.setProperty("showDropIndicator", False)
         self.tableViewSetting.setDragDropOverwriteMode(False)
         self.tableViewSetting.setTextElideMode(QtCore.Qt.ElideMiddle)
@@ -318,7 +320,7 @@ class Ui_MainWindow(object):
         self.comboBox_selectedMont.setSizePolicy(sizePolicy)
         self.comboBox_selectedMont.setMinimumSize(QtCore.QSize(150, 30))
         self.comboBox_selectedMont.setMaximumSize(QtCore.QSize(150, 30))
-        self.comboBox_selectedMont.setMaxCount(25)
+        self.comboBox_selectedMont.setMaxCount(10)
         self.comboBox_selectedMont.setFrame(True)
         self.comboBox_selectedMont.setObjectName("comboBox_selectedMont")
         self.verticalLayout_3.addWidget(self.comboBox_selectedMont)
@@ -423,13 +425,15 @@ class Ui_MainWindow(object):
         self.dateEdit_shifts.setDisplayFormat(_translate("MainWindow", "dd.MM.yy"))
         self.label_3.setText(_translate("MainWindow", "Тариф"))
         self.label_4.setText(_translate("MainWindow", "Настр. тарифа"))
-        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab), _translate("MainWindow", "Настройки"))
+        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab),
+                                          _translate("MainWindow", "Настройки"))
         self.label_5.setText(_translate("MainWindow", "Зарплата"))
         self.label_7.setText(_translate("MainWindow", "Получено"))
         self.label_6.setText(_translate("MainWindow", "Долг"))
         self.pushButton_calcDept.setText(_translate("MainWindow", "Расчитать"))
         self.label_2.setText(_translate("MainWindow", "Выбрать месяц"))
-        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab_2), _translate("MainWindow", "Зарплата"))
+        self.tabWidget_setting.setTabText(self.tabWidget_setting.indexOf(self.tab_2),
+                                          _translate("MainWindow", "Зарплата"))
         self.action_addTariff.setText(_translate("MainWindow", "Добавить тариф"))
         self.action_removeTariff.setText(_translate("MainWindow", "Удалить тариф"))
         self.action_addRow.setText(_translate("MainWindow", "Добвить строку"))
