@@ -1,35 +1,37 @@
 
+
+
 QMainWindow {
-    background: #C7FFD1;
+    background: #96EBC4;
     width: 10px; /* when vertical */
     height: 10px; /* when horizontal */
 }
 
 QFrame {
-    background-color: #B2FFC0;
-    selection-background-color: #AABF86;
+    background-color: #9AC2E9;
+    selection-background-color: #557A9E;
     font: bold italic  14px C059;
-    border: 2px solid #87B8BF;
+    border: 2px solid #CFF99E;
     border-radius: 10px;
 }
 
 QPushButton {
     background-color: #C7FFD1;
-    border-style: outset;
+    border: 2px solid;
     border-width: 2px;
     border-radius: 5px;
-    border-color: 2px solid green;
+    border-color: #87B8BF;
     font: bold italic 14px;
     max-width: 5px;
     padding: 4px;
 }
 
 QPushButton:hover {
-    background-color: #AABF86;
+    background-color: #557A9E;
 }
 
 QPushButton:pressed {
-    background-color: #D9FF99;
+    background-color: #51A27D;
     border-style: inset;
 }
 
@@ -48,37 +50,43 @@ QDateEdit {
 
 QComboBox {
     background-color: #C7FFD1;
-    selection-background-color: #AABF86;
+    selection-background-color: #557A9E;
     font: bold italic 14px C059;
+    border: 2px solid #CFF99E;
+    border-radius: 4px;
+    padding: 1px 18px 1px 3px
 }
 
 QTableCornerButton::section {
- background: #B2FFC0;
- border: 1px solid green;
+ background: #49D897;
+ border: 1px solid #CFF99E;
 }
 
 QHeaderView {
-    background-color: #E3FFB2;
+    background-color: #49D897;
     min-height:25px;
 }
 
 QHeaderView::section {
-    background-color: #E3FFB2;
+    background-color: #49D897;
 }
 
 
 QDockWidget {
-    background-color: #C7FFD1;
+    background-color: #D9FF99;
 }
 
 QTabBar::tab {
- background: #D9FF99;
+ background: #49D897;
  font: bold italic 14px C059;
+ border: 2px solid #CFF99E;
+ border-radius: 4px;
  min-height:120px;
+ min-width:25px;
 }
 
 QTabBar::tab:selected {
-    background: #AABF86;
+    background: #51A27D;
 }
 
 QScrollBar:horizontal {
@@ -114,4 +122,36 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     background: #E3FFB2;
 }
 
+QMenuBar {
+    background-color: #B2FFC0;
+    spacing: 20px; /* spacing between menu bar items */
+}
 
+QMenuBar::item {
+    padding: 4px 8px;
+    background: #49D897;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected { /* when selected using mouse or keyboard */
+    background: #557A9E;
+}
+
+QMenuBar::item:pressed {
+    background: #5193D2;
+}
+
+QMenu {
+    background-color: #5193D2; /* sets background of the menu */
+    border: 1px solid black;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: ;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #5193D2;
+}
