@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>1107</width>
-    <height>513</height>
+    <height>505</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -18,8 +24,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>1200</width>
-    <height>800</height>
+    <width>1400</width>
+    <height>505</height>
    </size>
   </property>
   <property name="font">
@@ -39,6 +45,12 @@
   </property>
   <property name="windowTitle">
    <string>Моя зарплата в такси</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>48</width>
+    <height>48</height>
+   </size>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="font">
@@ -284,6 +296,9 @@
           </property>
           <item>
            <widget class="QLabel" name="label">
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
             <property name="text">
              <string>Дата смены</string>
             </property>
@@ -342,6 +357,9 @@
           </item>
           <item>
            <widget class="QLabel" name="label_3">
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
             <property name="text">
              <string>Тариф</string>
             </property>
@@ -405,6 +423,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="lineWidth">
+             <number>0</number>
             </property>
             <property name="text">
              <string>Настр. тарифа</string>
@@ -504,6 +525,9 @@
            </property>
            <item>
             <widget class="QLabel" name="label_5">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
              <property name="text">
               <string>Зарплата</string>
              </property>
@@ -548,7 +572,7 @@
                <enum>QFrame::Plain</enum>
               </property>
               <property name="lineWidth">
-               <number>2</number>
+               <number>0</number>
               </property>
               <property name="text">
                <string/>
@@ -564,6 +588,9 @@
            </item>
            <item>
             <widget class="QLabel" name="label_7">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
              <property name="text">
               <string>Получено</string>
              </property>
@@ -605,7 +632,7 @@
                <enum>QFrame::Plain</enum>
               </property>
               <property name="lineWidth">
-               <number>2</number>
+               <number>0</number>
               </property>
               <property name="text">
                <string/>
@@ -618,6 +645,9 @@
            </item>
            <item>
             <widget class="QLabel" name="label_6">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
              <property name="text">
               <string>Долг</string>
              </property>
@@ -656,7 +686,7 @@
                <enum>QFrame::NoFrame</enum>
               </property>
               <property name="lineWidth">
-               <number>2</number>
+               <number>0</number>
               </property>
               <property name="midLineWidth">
                <number>0</number>
@@ -700,6 +730,9 @@
            </item>
            <item>
             <widget class="QLabel" name="label_2">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
              <property name="text">
               <string>Выбрать месяц</string>
              </property>

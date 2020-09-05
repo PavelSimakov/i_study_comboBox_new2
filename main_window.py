@@ -5,6 +5,7 @@ import pickle
 import time
 import os
 import re
+from datetime import date
 from decimal import Decimal
 from typing import List, Any
 
@@ -33,8 +34,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
         self.payOut_dict = {}
 
         # настройка dateEdit
-        self.date = QtCore.QDate  # экземпляр QDate
-        self.dateEdit_shifts.setDate(self.date.currentDate())  # устанавливаем текущую дату в editDate
+        self.date_shift = date  # экземпляр QDate
+        self.dateEdit_shifts.setDate(self.date_shift.today())  # устанавливаем текущую дату в editDate
 
         # вертикальный HeaderList в таблице смен
         self.shiftVerticalHeaderList = ('Яндекс', 'Gett', 'City', 'Штрафы', 'Аванс', 'Общий накат', 'Тариф',
@@ -47,7 +48,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # подготовка таблицы для настройки тарифов
         self.table_settingTariffsModel = QtGui.QStandardItemModel()  # модель для талицы настроек тарифов
-        self.tableViewSetting.setModel(self.table_settingTariffsModel)  # подключаем модель к таблице
+        self.tableView_setting.setModel(self.table_settingTariffsModel)  # подключаем модель к таблице
         self.tableHeaderList = ['Накат', 'Проц.']  # список названий колонок
         self.table_settingTariffsModel.setHorizontalHeaderLabels(self.tableHeaderList)  # подключаем названия колонок
         # к таблице
@@ -296,6 +297,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                 for row in range(self.StIM_shiftsTable.rowCount(index)):  # цикл по строкам
                     self.StIM_shiftsTable.setItem(row, j, QtGui.QStandardItem(date_list[j][row]))  # заполнение таблицы
                     # данными по сменам
+            self.dateEdit_shifts.setDate(self.date_shift.today().replace(month=int(self.comboBox_selectedMont.
+                                                                                   currentText()[:-3])))
 
     # метод добавлят смену в таблицу
     def addShift_tableShifts(self):
@@ -333,7 +336,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                     coefficient = reverse_dict[key_reverse_dict]
                     break
         else:
-            QtWidgets.QMessageBox.information(window, "Предупреждение",
+            QtWidgets.QMessageBox.information(splash, "Предупреждение",
                                               "Пожалуйста выберите смену для расчёта",
                                               buttons=QtWidgets.QMessageBox.Close,
                                               defaultButton=QtWidgets.QMessageBox.Close)
