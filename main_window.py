@@ -22,6 +22,33 @@ def load_data(sp):
         QtWidgets.qApp.processEvents()  # Запускаем оборот цикла
 
 
+def load_data_file(a):
+    f = open('save_dates/' + a, 'rb')  # открываем файл
+    b = pickle.load(f)  # загружаем файл в словарь
+    f.close()  # закрываем файл
+    return b
+
+
+def save_data_files(a, b):
+    f = open('save_dates/' + a, 'wb')
+    pickle.dump(b, f)
+    f.close()
+
+
+def create_dialog_message(a, b, c):
+    QtWidgets.QMessageBox.information(a, b, c, defaultButton=QtWidgets.QMessageBox.Ok)
+
+
+def name_file_comboBox(a: str):
+    names_files_list = os.listdir(a)
+    name_file = []
+    for i in range(len(names_files_list)):
+        if re.search('\d+', names_files_list[i]) is not None:
+            name_file.append(names_files_list[i][:-4])
+    name_file.sort()
+    return name_file
+
+
 class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
@@ -61,19 +88,13 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # если файлы, с сохранёнными настройками, существуют то они загружаются для дальнейшего использования
         try:
-            f = open('save_dates/settingTariffDict.txt', 'rb')  # открываем файл с настройками тарифа
-            self.settingTariffDict = pickle.load(f)  # загружаем файл в словарь settingTariffDict
-            f.close()  # закрываем файл
-            f = open('save_dates/comboBox_currentIndex.txt', 'rb')  # открываем файл с настройкой
+            self.settingTariffDict = load_data_file('settingTariffDict.txt')  # открываем файл с настройками тарифа
+            self.current_index = load_data_file('comboBox_currentIndex.txt')  # открываем файл с настройкой
             # выбранного тарифа
-            self.current_index = pickle.load(f)  # загружаем файл в current_index
-            f.close()  # закрываем файл
         # если  файлов с настпройками тарифов нет, то выполняется этот код
         except (FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии настроеных тарифов
-            QtWidgets.QMessageBox.information(splash, 'Тарифы не настроены!',
-                                              'Вам нужно настроить тарифы для расчёта зарплаты.',
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            create_dialog_message(splash, 'Тарифы не настроены!', 'Вам нужно настроить тарифы для расчёта зарплаты.')
         # если тарифы настроены то выполняется этот код
         else:
             self.comboBox_setting.addItems(self.settingTariffDict.keys())  # заполнение comboBox названиями тарифов
@@ -104,16 +125,12 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
         # загружаем данные смен из сохранённого файла dateMont
         try:
-            f = open('save_dates/' + self.dateEdit_shifts.text()[3:] + '.txt', 'rb')  # открываем файл сосменами
+            self.dateMonth = load_data_file(self.dateEdit_shifts.text()[3:] + '.txt')  # открываем файл со сменами
             # текущего месяца
-            self.dateMonth = pickle.load(f)  # загружаем файл в dateMonth
-            f.close()  # закрываем файл
         # если файла не существует выполняется этот код
         except(FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии смен в текущем месяце
-            QtWidgets.QMessageBox.information(splash, 'Нет смен в текущем месяце.',
-                                              'Создайте смены или загрузите другой месяц.',
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            create_dialog_message(splash, 'Нет смен в текущем месяце.', 'Создайте смены или загрузите другой месяц.')
         # если файл существует то заполняем таблицу смен
         else:
             shiftsNameList = list(self.dateMonth.keys())  # список названий смен
@@ -128,17 +145,12 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
                     # данными по сменам
 
         try:
-            f = open('save_dates/f_salary_dict.txt', 'rb')
-            self.f_salary_dict = pickle.load(f)
-            f.close()
-            f = open('save_dates/payOut_dict.txt', 'rb')
-            self.payOut_dict = pickle.load(f)
-            f.close()
+            self.f_salary_dict = load_data_file('f_salary_dict.txt')
+            self.payOut_dict = load_data_file('payOut_dict.txt')
+
         except(FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии смен в текущем месяце
-            QtWidgets.QMessageBox.information(splash, 'Нет сохранённых данных.',
-                                              'При работе программы будут созданны базы данных.',
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            create_dialog_message(splash, 'Нет сохранённых данных.', 'При работе программы будут созданны базы данных.')
         else:
             #
             salary_list = []
@@ -157,12 +169,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             self.label_salary.setText(str(f_salary))
             self.label_payOut.setText(str(payOut))
 
-            names_files_list = os.listdir('save_dates')
-            name_file = []
-            for i in range(len(names_files_list)):
-                if re.search('\d+', names_files_list[i]) is not None:
-                    name_file.append(names_files_list[i][:-4])
-            name_file.sort()
+            name_file = name_file_comboBox('save_dates')
             self.comboBox_selectedMont.addItems(name_file)
 
         # действие при выборе тарифа
@@ -232,13 +239,8 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
 
     # метод сохраняет настройки тарифов в файлы
     def saveSettings(self):
-        f = open('save_dates/settingTariffDict.txt', 'wb')
-        pickle.dump(self.settingTariffDict, f)
-        f.close()
-        current_index = self.comboBox_setting.currentIndex()
-        f = open('save_dates/comboBox_currentIndex.txt', 'wb')
-        pickle.dump(current_index, f)
-        f.close()
+        save_data_files('settingTariffDict.txt', self.settingTariffDict)
+        save_data_files('comboBox_currentIndex.txt', self.comboBox_setting.currentIndex())
 
     # метод активирует выбранный тариф и показывает его настройки
     def comboBox_setting_activated(self, v):
@@ -281,9 +283,7 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             f.close()
         except(FileNotFoundError, EOFError):
             # диалоговое окно с информацией о отсутствии смен в текущем месяце
-            QtWidgets.QMessageBox.information(splash, 'Нет смен в выбраном месяце.',
-                                              'Попробуйте выбрать другой месяц.',
-                                              defaultButton=QtWidgets.QMessageBox.Ok)
+            create_dialog_message(splash, 'Нет смен в выбраном месяце.', 'Попробуйте выбрать другой месяц.')
             # если файл существует то заполняем таблицу смен
         else:
             index = QtCore.QModelIndex()  # просто индекс
@@ -392,22 +392,11 @@ class MyWindow(QtWidgets.QMainWindow, my_form.Ui_MainWindow):
             date_shifts.append(date_shift)
         self.dateMonth = dict(zip(shift_name_list, date_shifts))
 
-        f = open('save_dates/' + self.dateEdit_shifts.text()[3:] + '.txt', 'wb')
-        pickle.dump(self.dateMonth, f)
-        f.close()
-        f = open('save_dates/f_salary_dict.txt', 'wb')
-        pickle.dump(self.f_salary_dict, f)
-        f.close()
-        f = open('save_dates/payOut_dict.txt', 'wb')
-        pickle.dump(self.payOut_dict, f)
-        f.close()
+        save_data_files(self.dateEdit_shifts.text()[3:] + '.txt', self.dateMonth)
+        save_data_files('f_salary_dict.txt', self.f_salary_dict)
+        save_data_files('payOut_dict.txt', self.payOut_dict)
 
-        names_files_list = os.listdir('save_dates')
-        name_file = []
-        for i in range(len(names_files_list)):
-            if re.search('\d+', names_files_list[i]) is not None:
-                name_file.append(names_files_list[i][:-4])
-        name_file.sort()
+        name_file = name_file_comboBox('save_dates')
         self.comboBox_selectedMont.clear()
         self.comboBox_selectedMont.addItems(name_file)
 
@@ -430,7 +419,7 @@ if __name__ == "__main__":
     window = MyWindow()  # Создаем экземпляр класса
     desktop = QtWidgets.QApplication.desktop()
     window.move(desktop.availableGeometry().center() - window.rect().center())
-    ico = QtGui.QIcon('data/taxi_icon_72.png')
+    ico = QtGui.QIcon('data/taxi_icon_48.png')
     window.setWindowIcon(ico)
     load_data(splash)  # Загружаем данные
     window.show()  # Отображаем окно
