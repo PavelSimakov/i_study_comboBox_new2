@@ -100,7 +100,7 @@
      <x>0</x>
      <y>0</y>
      <width>1107</width>
-     <height>29</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="font">
@@ -162,6 +162,9 @@
     <property name="title">
      <string>Смены</string>
     </property>
+    <addaction name="action_addMonth"/>
+    <addaction name="action_removeMonth"/>
+    <addaction name="separator"/>
     <addaction name="action_addShift"/>
     <addaction name="action_removeShift"/>
     <addaction name="separator"/>
@@ -893,6 +896,16 @@
   <action name="action_saveData">
    <property name="text">
     <string>Сохранить данные</string>
+   </property>
+  </action>
+  <action name="action_addMonth">
+   <property name="text">
+    <string>Добавить месяц</string>
+   </property>
+  </action>
+  <action name="action_removeMonth">
+   <property name="text">
+    <string>Удалить месяц</string>
    </property>
   </action>
  </widget>

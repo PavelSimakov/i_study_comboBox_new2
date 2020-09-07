@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.tableView_shifts)
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1107, 29))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1107, 25))
         font = QtGui.QFont()
         font.setFamily("C059 [UKWN]")
         font.setPointSize(12)
@@ -228,12 +228,14 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.tableView_setting.setFont(font)
         self.tableView_setting.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.tableView_setting.setStyleSheet("QHeaderView {min-width: 25px;}")
+        self.tableView_setting.setStyleSheet("QHeaderView {\n"
+"    min-width: 25px;\n"
+"}")
         self.tableView_setting.setInputMethodHints(QtCore.Qt.ImhDigitsOnly)
         self.tableView_setting.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-        self.tableView_setting.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed | QtWidgets.
-                                               QAbstractItemView.CurrentChanged | QtWidgets.
-                                               QAbstractItemView.DoubleClicked | QtWidgets.
+        self.tableView_setting.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed|QtWidgets.
+                                               QAbstractItemView.CurrentChanged|QtWidgets.
+                                               QAbstractItemView.DoubleClicked|QtWidgets.
                                                QAbstractItemView.EditKeyPressed)
         self.tableView_setting.setProperty("showDropIndicator", False)
         self.tableView_setting.setDragDropOverwriteMode(False)
@@ -408,6 +410,10 @@ class Ui_MainWindow(object):
         self.action_calculationShift.setObjectName("action_calculationShift")
         self.action_saveData = QtWidgets.QAction(MainWindow)
         self.action_saveData.setObjectName("action_saveData")
+        self.action_addMonth = QtWidgets.QAction(MainWindow)
+        self.action_addMonth.setObjectName("action_addMonth")
+        self.action_removeMonth = QtWidgets.QAction(MainWindow)
+        self.action_removeMonth.setObjectName("action_removeMonth")
         self.menu_settingTariffs.addAction(self.action_addRow)
         self.menu_settingTariffs.addAction(self.action_removeRow)
         self.menu_settingTariffs.addSeparator()
@@ -417,6 +423,9 @@ class Ui_MainWindow(object):
         self.menu_Tariffs.addAction(self.action_removeTariff)
         self.menu_Tariffs.addSeparator()
         self.menu_Tariffs.addAction(self.menu_settingTariffs.menuAction())
+        self.menuShifts.addAction(self.action_addMonth)
+        self.menuShifts.addAction(self.action_removeMonth)
+        self.menuShifts.addSeparator()
         self.menuShifts.addAction(self.action_addShift)
         self.menuShifts.addAction(self.action_removeShift)
         self.menuShifts.addSeparator()
@@ -426,7 +435,7 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menuShifts.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget_setting.setCurrentIndex(0)
+        self.tabWidget_setting.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -459,3 +468,5 @@ class Ui_MainWindow(object):
         self.action_removeShift.setText(_translate("MainWindow", "Удалить смену"))
         self.action_calculationShift.setText(_translate("MainWindow", "Расчитать смену"))
         self.action_saveData.setText(_translate("MainWindow", "Сохранить данные"))
+        self.action_addMonth.setText(_translate("MainWindow", "Добавить месяц"))
+        self.action_removeMonth.setText(_translate("MainWindow", "Удалить месяц"))
